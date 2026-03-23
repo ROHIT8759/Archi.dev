@@ -63,14 +63,22 @@ export default function Hero() {
       ref={containerRef}
       className="relative min-h-[100vh] w-full flex flex-col justify-center bg-black overflow-hidden pb-28 md:pb-32"
     >
-      <video
-        src="https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-network-connections-loop-28828-large.mp4"
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-screen mask-radial pointer-events-none"
-      />
+      <div className="absolute inset-0 pointer-events-none opacity-30">
+        <LineWaves
+          speed={0.3}
+          innerLineCount={32}
+          outerLineCount={36}
+          warpIntensity={1}
+          rotation={-45}
+          edgeFadeWidth={0}
+          colorCycleSpeed={1}
+          brightness={0.2}
+          color1="#ffffff"
+          color2="#00F0FF"
+          color3="#8A2BE2"
+          enableMouseInteraction={false}
+        />
+      </div>
       <div className="bg-grid absolute inset-0 pointer-events-none" />
       <div className="bg-noise absolute inset-0" />
       <motion.div
