@@ -461,14 +461,56 @@ export function PropertyInspector({ width = 320 }: { width?: number }) {
           Properties
         </div>
         <div
+          className="studio-card-raised"
           style={{
-            fontSize: 13,
-            color: "var(--muted)",
-            textAlign: "center",
-            marginTop: 32,
+            marginTop: 16,
+            borderRadius: 18,
+            padding: 18,
+            display: "grid",
+            gap: 14,
           }}
         >
-          Select a node to edit its properties
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            <span className="studio-badge">Inspector idle</span>
+            <span className="studio-badge">Click any block</span>
+          </div>
+          <div>
+            <div
+              style={{
+                fontSize: 20,
+                lineHeight: 1.15,
+                fontWeight: 700,
+                color: "var(--foreground)",
+                marginBottom: 8,
+              }}
+            >
+              Select a block to unlock editing, schema tools, and runtime details.
+            </div>
+            <div style={{ fontSize: 13, lineHeight: 1.6, color: "var(--secondary)" }}>
+              The right rail adapts to the selected node. API blocks expose contracts, functions expose inputs and outputs, and database blocks open deeper schema tooling.
+            </div>
+          </div>
+          <div style={{ display: "grid", gap: 10 }}>
+            {[
+              "REST blocks reveal routes, responses, and linked functions.",
+              "Function blocks surface execution flow, outputs, and environment config.",
+              "Database blocks open tables, migrations, environments, and ERD tooling.",
+            ].map((tip) => (
+              <div
+                key={tip}
+                className="canvas-hint-card"
+                style={{
+                  borderRadius: 14,
+                  padding: "10px 12px",
+                  fontSize: 12,
+                  lineHeight: 1.5,
+                  color: "var(--secondary)",
+                }}
+              >
+                {tip}
+              </div>
+            ))}
+          </div>
         </div>
       </aside>
     );

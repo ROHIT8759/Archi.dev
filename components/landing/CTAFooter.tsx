@@ -58,7 +58,7 @@ export default function CTAFooter() {
     y.set(0);
   };
   return (
-    <footer ref={containerRef} className="min-h-[100vh] flex flex-col items-center justify-center relative overflow-hidden bg-black">
+    <footer ref={containerRef} className="relative flex min-h-[84vh] flex-col items-center justify-center overflow-hidden bg-black">
       <motion.div
         className="absolute inset-0 z-0 pointer-events-none opacity-40"
         style={{
@@ -109,93 +109,143 @@ export default function CTAFooter() {
           </motion.div>
         ))}
       </div>
-      <div className="relative z-10 text-center px-6 max-w-6xl w-full flex flex-col items-center justify-center flex-1 pt-32">
+      <div className="relative z-10 flex-1 w-full max-w-7xl px-6 pt-28 pb-14">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-8"
+          className="mb-8 flex justify-center lg:justify-start"
         >
           <span className="glass-panel px-6 py-2.5 rounded-full text-[#00F0FF] text-xs font-semibold uppercase tracking-[0.25em] flex items-center gap-3 inline-flex">
             <span className="w-1.5 h-1.5 rounded-full bg-[#00F0FF] animate-glow-cyan" />
             Start today
           </span>
         </motion.div>
-        <motion.h2
-          initial={{ y: 40, opacity: 0, filter: "blur(10px)" }}
-          whileInView={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-          className="text-white font-medium tracking-tighter leading-[0.9] mb-12"
-          style={{
-            fontSize: "clamp(4.5rem, 12vw, 12rem)",
-            textShadow: "0 20px 60px rgba(0,0,0,0.5)"
-          }}
-        >
-          Ready to <br className="md:hidden" /> build?
-        </motion.h2>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-          className="flex flex-col items-center gap-8 relative"
-        >
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-white/20 blur-[60px] rounded-full pointer-events-none" />
-          <motion.button
-            ref={buttonRef}
-            type="button"
-            onClick={() => router.push("/login")}
-            style={{ x, y }}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            className="group relative bg-white text-black px-12 py-6 rounded-full text-xl font-bold cursor-pointer select-none overflow-hidden"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          >
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
+          <div className="text-center lg:text-left">
+            <motion.h2
+              initial={{ y: 40, opacity: 0, filter: "blur(10px)" }}
+              whileInView={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+              className="text-white font-medium tracking-tighter leading-[0.9] mb-8"
+              style={{
+                fontSize: "clamp(3.6rem, 9vw, 8rem)",
+                textShadow: "0 20px 60px rgba(0,0,0,0.5)"
+              }}
+            >
+              Ready to
+              <br />
+              build for real?
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.18 }}
+              className="mx-auto max-w-xl text-base leading-relaxed text-white/42 lg:mx-0"
+            >
+              Launch your first architecture in minutes, keep the code portable, and ship a backend that still makes sense three months later.
+            </motion.p>
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-[#00F0FF]/20 to-[#8A2BE2]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-            />
-            <span className="relative z-10 flex items-center gap-3">
-              Start building for free
-              <motion.span
-                className="inline-block"
-                animate={{ x: [0, 5, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.24 }}
+              className="relative mt-8 flex flex-col items-center gap-6 lg:items-start"
+            >
+              <div className="absolute top-1/2 left-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/20 blur-[60px] pointer-events-none lg:left-[34%]" />
+              <motion.button
+                ref={buttonRef}
+                type="button"
+                onClick={() => router.push("/login")}
+                style={{ x, y }}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+                className="group relative overflow-hidden rounded-full bg-white px-10 py-5 text-lg font-bold text-black cursor-pointer select-none"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               >
-                →
-              </motion.span>
-            </span>
-          </motion.button>
-          <p className="text-white/40 text-base font-light tracking-wide">
-            No credit card required <span className="mx-2 opacity-30">•</span> Deploy in 60 seconds
-          </p>
-          <motion.div
-            className="flex items-center gap-4 mt-4 glass-panel px-6 py-3 rounded-full"
-            whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.05)" }}
-          >
-            <div className="flex -space-x-3">
-              {[
-                "bg-gradient-to-br from-cyan-400 to-blue-600",
-                "bg-gradient-to-br from-violet-400 to-purple-600",
-                "bg-gradient-to-br from-emerald-400 to-teal-600",
-                "bg-gradient-to-br from-orange-400 to-red-500",
-              ].map((gradient, i) => (
                 <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.4 + (i * 0.1) }}
-                  className={`w-8 h-8 rounded-full border-2 border-black shadow-lg ${gradient}`}
+                  className="absolute inset-0 bg-gradient-to-r from-[#00F0FF]/20 to-[#8A2BE2]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                 />
-              ))}
+                <span className="relative z-10 flex items-center gap-3">
+                  Start building for free
+                  <motion.span
+                    className="inline-block"
+                    animate={{ x: [0, 5, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    →
+                  </motion.span>
+                </span>
+              </motion.button>
+              <p className="text-white/40 text-base font-light tracking-wide">
+                No credit card required <span className="mx-2 opacity-30">•</span> Deploy in 60 seconds
+              </p>
+              <motion.div
+                className="glass-panel flex items-center gap-4 rounded-full px-6 py-3"
+                whileHover={{ scale: 1.02, backgroundColor: "rgba(255,255,255,0.05)" }}
+              >
+                <div className="flex -space-x-3">
+                  {[
+                    "bg-gradient-to-br from-cyan-400 to-blue-600",
+                    "bg-gradient-to-br from-violet-400 to-purple-600",
+                    "bg-gradient-to-br from-emerald-400 to-teal-600",
+                    "bg-gradient-to-br from-orange-400 to-red-500",
+                  ].map((gradient, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.4 + (i * 0.1) }}
+                      className={`w-8 h-8 rounded-full border-2 border-black shadow-lg ${gradient}`}
+                    />
+                  ))}
+                </div>
+                <span className="text-white/40 text-sm">
+                  Joined by <span className="text-white/80 font-semibold">3,200+</span> engineers this month
+                </span>
+              </motion.div>
+            </motion.div>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 24, filter: "blur(10px)" }}
+            whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.18 }}
+            className="studio-card-raised grid gap-4 rounded-[2rem] p-5"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-[10px] uppercase tracking-[0.24em] text-white/35">Launch posture</div>
+                <div className="mt-1 text-lg font-semibold text-white">Production-ready from day one</div>
+              </div>
+              <span className="studio-badge">No lock-in</span>
             </div>
-            <span className="text-white/40 text-sm">
-              Joined by{" "}
-              <span className="text-white/80 font-semibold">3,200+</span>{" "}
-              engineers this month
-            </span>
+            {[
+              { label: "Deploy time", value: "60s", tone: "#00F0FF" },
+              { label: "OpenAPI export", value: "Included", tone: "#8A2BE2" },
+              { label: "Team collaboration", value: "Live", tone: "#28C840" },
+            ].map((item) => (
+              <div
+                key={item.label}
+                className="rounded-2xl border border-white/[0.06] bg-black/30 px-4 py-3"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm text-white/55">{item.label}</span>
+                  <span className="text-sm font-semibold" style={{ color: item.tone }}>{item.value}</span>
+                </div>
+              </div>
+            ))}
+            <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-4">
+              <div className="text-[10px] uppercase tracking-[0.22em] text-white/32">What you leave with</div>
+              <div className="mt-3 grid gap-2 text-sm text-white/60">
+                <div>Typed backend scaffolding matched to your architecture</div>
+                <div>Exportable specs, runtime logic, and deployment assets</div>
+                <div>A workspace your team can iterate on instead of rewrite</div>
+              </div>
+            </div>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
       <div className="w-full max-w-7xl px-6 pb-8 z-10 mt-auto">
         <motion.div
