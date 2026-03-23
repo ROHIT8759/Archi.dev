@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { ensureUser, requireCredits, serializeBalance } from "@/lib/credit";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { isAdminEmail, ADMIN_BALANCE } from "@/lib/admin";
 const bodySchema = z.object({
   amount: z.number().int().positive(),
   reason: z.string().optional(),
@@ -13,6 +14,10 @@ export async function POST(req: NextRequest) {
   } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+  // Admin users have unlimited credits — skip DB deduction entirely.
+  if (isAdminEmail(user.email)) {
+    return NextResponse.json({ balance: ADMIN_BALANCE });
   }
   await ensureUser(user.id, user.email ?? undefined);
   const json = await req.json();

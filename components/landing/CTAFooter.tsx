@@ -3,7 +3,14 @@ import { useRef } from "react";
 import { motion, useSpring, useTransform, useScroll } from "framer-motion";
 import { useRouter } from "next/navigation";
 
-const footerLinks = ["Privacy", "Terms", "Status", "Docs"];
+const footerLinks = [
+  { label: "Privacy", href: "/privacy" },
+  { label: "Terms", href: "/terms" },
+  { label: "Status", href: "/status" },
+  { label: "Docs", href: "/docs" },
+  { label: "Blog", href: "/blog" },
+  { label: "Changelog", href: "/changelog" },
+];
 const socialLinks = [
   {
     label: "GitHub",
@@ -204,11 +211,12 @@ export default function CTAFooter() {
           <div className="flex items-center gap-6">
             {footerLinks.map((link) => (
               <button
-                key={link}
+                key={link.label}
                 type="button"
+                onClick={() => router.push(link.href)}
                 className="hover:text-white/70 transition-colors duration-300 cursor-pointer relative group"
               >
-                {link}
+                {link.label}
                 <span className="absolute -bottom-1 left-0 w-0 h-px bg-white/40 transition-all duration-300 group-hover:w-full" />
               </button>
             ))}

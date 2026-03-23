@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ensureUser, refreshMonthlyCredits, serializeBalance } from "@/lib/credit";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+import { isAdminEmail, ADMIN_BALANCE } from "@/lib/admin";
 export async function GET() {
   try {
     const supabase = await getSupabaseServerClient();
@@ -10,6 +11,10 @@ export async function GET() {
     } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    }
+    // Admin users get unlimited credits — no DB call needed.
+    if (isAdminEmail(user.email)) {
+      return NextResponse.json({ balance: ADMIN_BALANCE });
     }
     await ensureUser(user.id, user.email ?? undefined);
     const balance = await refreshMonthlyCredits(user.id);
