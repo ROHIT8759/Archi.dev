@@ -7,6 +7,7 @@ import type {
   DatabaseBlock,
   QueueBlock,
   InfraBlock,
+  InputField,
 } from "@/lib/schema/node";
 import type { Node, Edge } from "@xyflow/react";
 import type { NodeData } from "@/lib/schema/node";
