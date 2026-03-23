@@ -3,7 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 
 const PUBLIC_PATHS = ["/login", "/auth/callback", "/auth/logout", "/favicon.ico"];
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const bypassAuthForE2E =
     process.env.E2E_BYPASS_AUTH === "1" ||

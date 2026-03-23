@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
+import path from "node:path";
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    // Explicit root avoids false workspace-root inference in WSL/OneDrive paths.
+    root: path.resolve(__dirname),
+  },
   images: {
     // Allow Google OAuth profile pictures and GitHub avatars to be served
     // via next/image without disabling the built-in optimization layer.
