@@ -1,0 +1,719 @@
+@import "tailwindcss";
+
+/* ============================================
+   Archi.dev Landing Page — Custom Utilities
+   ============================================ */
+
+/* ============================================
+   Archi.dev Keyframes
+   ============================================ */
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes badgeGlow {
+  0%, 100% { box-shadow: 0 0 0px rgba(0,240,255,0); }
+  50%       { box-shadow: 0 0 22px rgba(0,240,255,0.22); }
+}
+
+@layer utilities {
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .bg-noise {
+    background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+    opacity: 0.03;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+
+  .text-gradient {
+    background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.4) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .glass-panel {
+    background: rgba(10, 10, 10, 0.4);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .mask-radial {
+    -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+    mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+  }
+}
+
+/* ============================================
+   ERMIZ Design System - Based on design-doc.md
+   ============================================ */
+
+/* Design Tokens */
+:root {
+  /* Background Layers */
+  --background: #08111d;
+  --panel: #101a2b;
+  --floating: #152338;
+  --panel-raised: #1a2a43;
+  --panel-soft: #0d1728;
+
+  /* Text Colors */
+  --foreground: #eef4ff;
+  --secondary: #c5d1e6;
+  --muted: #8e9ab2;
+
+  /* Accent */
+  --primary: #79b7ff;
+  --primary-strong: #4d93ff;
+  --success: #3ad69f;
+  --warning: #ffbf5b;
+  --destructive: #ff6b82;
+
+  /* Borders and shadows */
+  --border: #22324b;
+  --border-muted: #2b3d58;
+  --border-strong: #39506f;
+  --shadow-soft: 0 16px 36px rgba(3, 8, 18, 0.32);
+  --shadow-float: 0 24px 48px rgba(3, 8, 18, 0.42);
+  --shadow-glow: 0 0 0 1px rgba(121, 183, 255, 0.12), 0 18px 46px rgba(52, 115, 255, 0.14);
+}
+
+/* Tailwind v4 Theme Extension */
+@theme inline {
+  --color-background: #08111d;
+  --color-foreground: #eef4ff;
+  --color-panel: #101a2b;
+  --color-floating: #152338;
+  --color-primary: #79b7ff;
+  --color-secondary: #c5d1e6;
+  --color-muted: #8e9ab2;
+  --color-destructive: #ff6b82;
+  --color-border: #22324b;
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background:
+    radial-gradient(1200px 700px at 100% -10%, rgba(86, 153, 255, 0.16), transparent 55%),
+    radial-gradient(900px 540px at -10% 120%, rgba(62, 111, 214, 0.14), transparent 55%),
+    radial-gradient(780px 420px at 50% 0%, rgba(40, 72, 138, 0.12), transparent 60%),
+    var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+}
+
+p,
+span,
+div,
+label,
+button,
+input,
+textarea,
+select {
+  font-feature-settings: "ss01" on, "cv01" on;
+}
+
+button,
+input,
+textarea,
+select {
+  border-radius: 10px;
+  transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease, transform 0.08s ease, color 0.18s ease;
+}
+
+button:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 10px 22px rgba(3, 8, 18, 0.18);
+}
+
+button:active {
+  transform: translateY(0.5px);
+}
+
+input,
+textarea,
+select {
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--floating) 92%, #0a1018 8%);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--muted);
+}
+
+/* ============================================
+   React Flow Theme Overrides
+   ============================================ */
+
+.react-flow {
+  --xy-background-color: var(--background);
+  --xy-node-background-color: var(--panel);
+  --xy-node-border-color: var(--border);
+  --xy-edge-stroke: var(--muted);
+  --xy-edge-stroke-selected: var(--primary);
+  --xy-handle-background-color: var(--muted);
+  --xy-handle-border-color: var(--panel);
+  --xy-selection-background-color: rgba(121, 183, 255, 0.14);
+  --xy-controls-button-background-color: var(--floating);
+  --xy-controls-button-background-color-hover: var(--panel);
+  --xy-minimap-background-color: var(--floating);
+  --xy-minimap-mask-background-color: rgba(11, 11, 13, 0.6);
+}
+
+/* Controls Panel */
+.react-flow__controls {
+  background: var(--floating);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+.react-flow__controls button {
+  background: var(--floating);
+  border: none;
+  border-bottom: 1px solid var(--border);
+  width: 30px;
+  height: 30px;
+  padding: 6px;
+}
+
+.react-flow__controls button:last-child {
+  border-bottom: none;
+}
+
+.react-flow__controls button:hover {
+  background: var(--panel);
+}
+
+.react-flow__controls button svg {
+  fill: var(--foreground);
+  max-width: 14px;
+  max-height: 14px;
+}
+
+/* MiniMap */
+.react-flow__minimap {
+  background: var(--floating);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+/* Attribution */
+.react-flow__attribution {
+  background: var(--floating);
+  padding: 2px 6px;
+  border-radius: 4px 0 0 0;
+}
+
+.react-flow__attribution a {
+  color: var(--muted);
+  font-size: 9px;
+}
+
+/* Edges */
+.react-flow__edge-path {
+  stroke: var(--muted);
+  stroke-width: 1.8;
+}
+
+.react-flow__edge.selected .react-flow__edge-path,
+.react-flow__edge:focus .react-flow__edge-path,
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke: var(--primary);
+  stroke-width: 2.5;
+}
+
+/* Connection Line */
+.react-flow__connection-line {
+  stroke: var(--primary);
+  stroke-width: 2;
+}
+
+/* Handles */
+.react-flow__handle {
+  width: 11px;
+  height: 11px;
+  background: var(--muted);
+  border: 2px solid var(--panel);
+  border-radius: 50%;
+}
+
+.react-flow__handle:hover {
+  background: var(--primary);
+}
+
+.react-flow__handle.connecting {
+  background: var(--primary);
+}
+
+.react-flow__handle.valid {
+  background: #22c55e;
+}
+
+/* Background Grid */
+.react-flow__background pattern circle {
+  fill: rgba(142, 154, 178, 0.24);
+}
+
+/* ============================================
+   Scrollbar Styling
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-muted);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-muted) var(--background);
+}
+
+/* Enhanced scrollbar for sidebars */
+aside::-webkit-scrollbar {
+  width: 10px;
+}
+
+aside::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 8px 0;
+}
+
+aside::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+aside::-webkit-scrollbar-thumb:hover {
+  background: var(--border-strong);
+}
+
+aside {
+  scrollbar-width: auto;
+  scrollbar-color: var(--border) transparent;
+}
+
+/* ============================================
+   Focus & Selection States
+   ============================================ */
+
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(121, 183, 255, 0.14);
+}
+
+.no-focus-ring:focus-visible {
+  outline: none;
+}
+
+::selection {
+  background: rgba(124, 108, 255, 0.35);
+  color: var(--foreground);
+}
+
+/* ============================================
+   Custom Node Styles (Override for reliability)
+   ============================================ */
+
+.ermiz-node {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  min-width: 200px;
+  box-shadow: var(--shadow-soft);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
+}
+
+.ermiz-node:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+.ermiz-node.selected {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary), var(--shadow-float);
+}
+
+.ermiz-node-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.ermiz-node-type {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--primary);
+}
+
+.ermiz-node-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--foreground);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ermiz-node-body {
+  padding: 12px;
+  font-size: 12px;
+  color: var(--secondary);
+  min-height: 40px;
+  position: relative;
+}
+
+.ermiz-node-footer {
+  padding: 6px 12px;
+  font-size: 10px;
+  color: var(--muted);
+  background: rgba(22, 29, 40, 0.5);
+  border-top: 1px solid var(--border);
+  border-radius: 0 0 9px 9px;
+}
+
+/* ============================================
+   Panel Styles (Fallback)
+   ============================================ */
+
+.ermiz-panel {
+  background: var(--panel);
+  border-color: var(--border);
+}
+
+.ermiz-floating {
+  background: var(--floating);
+}
+
+/* Trigger Node Special Styling */
+.ermiz-node.trigger-accent {
+  border-left: 4px solid var(--primary);
+}
+
+/* ============================================
+   Sidebar Scroll
+   ============================================ */
+
+.sidebar-scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.sidebar-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+.sidebar-section {
+  overflow: visible;
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 999px;
+  transition: background 0.2s ease;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+/* Firefox */
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+/* ============================================
+   Sidebar Item Hover
+   ============================================ */
+
+.sidebar-item {
+  cursor: pointer;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  color: var(--secondary);
+  background: transparent;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+  will-change: transform;
+}
+
+.sidebar-item:hover {
+  background: var(--floating);
+  border-color: var(--border);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+.sidebar-item:active {
+  transform: translateY(0px);
+  box-shadow: none;
+}
+
+/* ============================================
+   Studio Surface System
+   ============================================ */
+
+.studio-shell {
+  position: relative;
+  isolation: isolate;
+}
+
+.studio-shell::before,
+.studio-shell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.studio-shell::before {
+  background:
+    radial-gradient(640px 220px at 18% 0%, rgba(121, 183, 255, 0.1), transparent 68%),
+    radial-gradient(720px 260px at 82% 0%, rgba(44, 218, 157, 0.06), transparent 72%);
+}
+
+.studio-shell::after {
+  background:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025), transparent 180px),
+    linear-gradient(to top, rgba(255, 255, 255, 0.02), transparent 80px);
+  mix-blend-mode: screen;
+  opacity: 0.7;
+}
+
+.studio-shell > * {
+  position: relative;
+  z-index: 1;
+}
+
+.studio-card {
+  border: 1px solid color-mix(in srgb, var(--border) 88%, transparent);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0)),
+    color-mix(in srgb, var(--panel) 92%, #09111a 8%);
+  box-shadow: var(--shadow-soft);
+}
+
+.studio-card-raised {
+  border: 1px solid color-mix(in srgb, var(--border-strong) 72%, transparent);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0)),
+    color-mix(in srgb, var(--floating) 92%, #0a111a 8%);
+  box-shadow: var(--shadow-glow);
+}
+
+.studio-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+  border-radius: 999px;
+  padding: 5px 10px;
+  background: rgba(8, 15, 25, 0.56);
+  color: var(--secondary);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid color-mix(in srgb, var(--border) 84%, transparent);
+  border-radius: 999px;
+  padding: 4px 10px;
+  background: rgba(8, 15, 25, 0.5);
+  color: var(--secondary);
+  font-size: 11px;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--muted);
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.03);
+  flex-shrink: 0;
+}
+
+.status-dot.success {
+  background: var(--success);
+}
+
+.status-dot.warning {
+  background: var(--warning);
+}
+
+.status-dot.danger {
+  background: var(--destructive);
+}
+
+.progress-track {
+  width: 100%;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--primary), color-mix(in srgb, var(--success) 38%, var(--primary) 62%));
+}
+
+.panel-handle {
+  position: relative;
+}
+
+.panel-handle::after {
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 34px;
+  height: 3px;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+  background: color-mix(in srgb, var(--border-strong) 64%, transparent);
+}
+
+.canvas-hint-card {
+  border: 1px solid color-mix(in srgb, var(--border) 86%, transparent);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0)),
+    rgba(8, 16, 28, 0.74);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-soft);
+}
+
+.canvas-empty-state {
+  border: 1px dashed color-mix(in srgb, var(--border-strong) 72%, transparent);
+  background:
+    radial-gradient(circle at top, rgba(121, 183, 255, 0.08), transparent 58%),
+    rgba(8, 16, 28, 0.52);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.workspace-fade-up {
+  animation: workspace-fade-up 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes workspace-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   Sidebar Panel Slide-in (narrow viewport)
+   ============================================ */
+
+@keyframes sidebar-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 1024px) {
+  .sidebar-panel {
+    animation: sidebar-slide-in 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
