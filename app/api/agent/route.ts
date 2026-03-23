@@ -77,8 +77,8 @@ function generateAgentPatch(input: AgentRequest) {
   const nodes = input.currentGraph.nodes;
   const existingAgentNodes = nodes.filter((node) => (node.data as { kind?: string }).kind === "process");
   const existingServiceBoundaries = nodes.filter((node) => (node.data as { kind?: string }).kind === "service_boundary");
-  const patchNodes: any[] = [];
-  const patchEdges: any[] = [];
+  const patchNodes: Node[] = [];
+  const patchEdges: Edge[] = [];
   if (existingAgentNodes.length === 0) {
     const orchestratorId = `agent_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
     const orchestratorNode = {
@@ -133,8 +133,8 @@ function generateAgentPatch(input: AgentRequest) {
   }
   return {
     summary: `Agent expansion: added ${patchNodes.length} agent-oriented node${patchNodes.length !== 1 ? "s" : ""} to the graph.`,
-    nodes: patchNodes as any[],
-    edges: patchEdges as any[],
+    nodes: patchNodes,
+    edges: patchEdges,
   };
 }
 export async function POST(req: NextRequest) {

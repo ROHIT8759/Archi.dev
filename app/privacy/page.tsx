@@ -162,7 +162,7 @@ export default function PrivacyPage() {
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
               className="text-white/40 text-base max-w-xl mx-auto leading-relaxed"
             >
-              Last updated <span className="text-white/65">March 24, 2026</span>. We take your privacy seriously — here's exactly what we collect and why.
+              Last updated <span className="text-white/65">March 24, 2026</span>. We take your privacy seriously — here&apos;s exactly what we collect and why.
             </motion.p>
           </div>
         </section>

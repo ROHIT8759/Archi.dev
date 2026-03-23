@@ -8,7 +8,6 @@ import type {
   QueueBlock,
   InfraBlock,
   InputField,
-  OutputField,
 } from "@/lib/schema/node";
 import type { Node, Edge } from "@xyflow/react";
 import type { NodeData } from "@/lib/schema/node";
@@ -84,6 +83,17 @@ function seedRow(fields: { name: string; type: string }[], index = 0): Row {
 }
 function wait(ms: number) { return new Promise<void>((r) => setTimeout(r, ms)); }
 function randMs(lo = 60, hi = 400) { return Math.floor(Math.random() * (hi - lo) + lo); }
+function hashToRange(seed: string, min: number, max: number): number {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) | 0;
+  const normalized = Math.abs(h % 1000) / 1000;
+  return Math.floor(min + normalized * (max - min));
+}
+function buildSelectSql(table: DatabaseBlock["tables"][number] | undefined): string {
+  if (!table) return "";
+  const cols = table.fields.map((f) => f.name).join(", ");
+  return `SELECT ${cols || "*"}\nFROM ${table.name}\nLIMIT 20;`;
+}
 function initVals(fields: InputField[]) {
   return Object.fromEntries(fields.map((f) => [f.name, mockForField(f.name, f.type)]));
 }
@@ -643,7 +653,7 @@ function ApiPane({ node, sv, envVars }: { node: ApiBinding; sv: number; envVars:
   const [reqTab, setReqTab] = useState<"Params" | "Auth" | "Headers" | "Body">("Params");
   const resHeaders = useMemo(() => ({
     "Content-Type": "application/json",
-    "X-Request-Id": "req_" + Math.random().toString(36).slice(2, 10),
+    "X-Request-Id": "req_local",
     "Cache-Control": "no-cache",
   }), []);
   const constructedUrl = useMemo(() => {
@@ -1056,18 +1066,11 @@ function FunctionPane({ node }: { node: ProcessDefinition }) {
 function DatabasePane({ node, sv }: { node: DatabaseBlock; sv: number }) {
   void sv;
   const [selectedTable, setSelectedTable] = useState(node.tables[0]?.name ?? "");
-  const [sql, setSql] = useState("");
+  const [sql, setSql] = useState(() => buildSelectSql(node.tables[0]));
   const [running, setRunning] = useState(false);
   const [queryResult, setQueryResult] = useState<SQLResult | null>(null);
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const currentTable = node.tables.find((t) => t.name === selectedTable);
-  useEffect(() => {
-    if (currentTable) {
-      const cols = currentTable.fields.map((f) => f.name).join(", ");
-      setSql(`SELECT ${cols || "*"}\nFROM ${currentTable.name}\nLIMIT 20;`);
-      setQueryResult(null);
-    }
-  }, [currentTable?.name]);
   const runQuery = useCallback(async () => {
     if (!sql.trim()) return;
     setRunning(true);
@@ -1115,6 +1118,17 @@ function DatabasePane({ node, sv }: { node: DatabaseBlock; sv: number }) {
           <div>
             <SLabel>Table</SLabel>
             <select style={INPUT} value={selectedTable} onChange={(e) => setSelectedTable(e.target.value)}>
+            <select
+              style={INPUT}
+              value={selectedTable}
+              onChange={(e) => {
+                const nextName = e.target.value;
+                setSelectedTable(nextName);
+                const nextTable = node.tables.find((t) => t.name === nextName);
+                setSql(buildSelectSql(nextTable));
+                setQueryResult(null);
+              }}
+            >
               {node.tables.map((t) => (
                 <option key={t.name} value={t.name}>
                   {t.name} ({getTable(t.name).size()} rows in store)
@@ -1341,12 +1355,12 @@ function MetricBar({ label, pct, color }: { label: string; pct: number; color: s
 function InfraPane({ node }: { node: InfraBlock }) {
   const resourceType = (node as { resourceType?: string }).resourceType ?? "unknown";
   const config = (node as { config?: Record<string, unknown> }).config ?? {};
-  const [metrics] = useState({
-    cpu: Math.floor(Math.random() * 55 + 10),
-    mem: Math.floor(Math.random() * 50 + 20),
-    disk: Math.floor(Math.random() * 40 + 10),
-    net: Math.floor(Math.random() * 70 + 10),
-  });
+  const metrics = useMemo(() => ({
+    cpu: hashToRange(`${node.id}-cpu`, 10, 65),
+    mem: hashToRange(`${node.id}-mem`, 20, 70),
+    disk: hashToRange(`${node.id}-disk`, 10, 50),
+    net: hashToRange(`${node.id}-net`, 10, 80),
+  }), [node.id]);
   const RT_COLOR: Record<string, string> = {
     ec2: C.amber, lambda: C.primary, eks: C.green, vpc: "#a78bfa",
     s3: C.amber, rds: C.primary, load_balancer: C.green, hpc: C.red,
@@ -1800,13 +1814,11 @@ export function TestPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
     setSelected(id);
     setViewMode(null);
   }, []);
-  useEffect(() => {
-    if (!isOpen) return;
-    if (nodes.length > 0 && (!selected || !nodes.find((n) => n.id === selected))) {
-      setSelected(nodes[0].id);
-    }
-  }, [isOpen, nodes]);
-  const activeNode = nodes.find((n) => n.id === selected) ?? null;
+  const resolvedSelected = useMemo(() => {
+    if (selected && nodes.some((n) => n.id === selected)) return selected;
+    return nodes[0]?.id ?? null;
+  }, [nodes, selected]);
+  const activeNode = nodes.find((n) => n.id === resolvedSelected) ?? null;
   const isEmpty = nodes.length === 0;
   return (
     <div style={{
@@ -1845,10 +1857,10 @@ export function TestPanel({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
         <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
           <div style={{ width: 240, flexShrink: 0, borderRight: `1px solid ${C.border}`, background: C.bg, overflowY: "auto", paddingTop: 8, paddingBottom: 16 }}>
             <SidebarGroup title="APIs" icon="⬡" items={groups.apis} selected={selected} onSelect={handleSelectNode} sv={sv} />
-            <SidebarGroup title="Functions" icon="⚡" items={groups.functions} selected={selected} onSelect={handleSelectNode} sv={sv} />
-            <SidebarGroup title="Databases" icon="◈" items={groups.databases} selected={selected} onSelect={handleSelectNode} sv={sv} />
-            <SidebarGroup title="Queues" icon="⇌" items={groups.queues} selected={selected} onSelect={handleSelectNode} sv={sv} />
-            <SidebarGroup title="Infrastructure" icon="⬜" items={groups.infra} selected={selected} onSelect={handleSelectNode} sv={sv} />
+            <SidebarGroup title="Functions" icon="⚡" items={groups.functions} selected={viewMode ? null : resolvedSelected} onSelect={handleSelectNode} sv={sv} />
+            <SidebarGroup title="Databases" icon="◈" items={groups.databases} selected={viewMode ? null : resolvedSelected} onSelect={handleSelectNode} sv={sv} />
+            <SidebarGroup title="Queues" icon="⇌" items={groups.queues} selected={viewMode ? null : resolvedSelected} onSelect={handleSelectNode} sv={sv} />
+            <SidebarGroup title="Infrastructure" icon="⬜" items={groups.infra} selected={viewMode ? null : resolvedSelected} onSelect={handleSelectNode} sv={sv} />
             <div style={{ borderTop: `1px solid ${C.border}`, marginTop: 8, paddingTop: 4 }}>
               <div style={{ fontSize: 10, fontWeight: 700, color: C.muted, letterSpacing: "0.07em", textTransform: "uppercase", padding: "8px 14px 4px" }}>
                 🔧&nbsp;TOOLS

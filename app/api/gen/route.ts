@@ -424,6 +424,156 @@ function buildFallbackArchitecturePlan(input: {
     files: ensureRequiredPlanFiles(files, input.language),
   };
 }
+function buildFallbackFileContent(input: {
+  filePath: string;
+  language: GenLanguage;
+  description: string;
+  plan: ArchitecturePlan;
+}): string {
+  const p = input.filePath.replace(/^\/+/, "").trim();
+  const d = input.description || "Generated fallback content.";
+  if (input.language === "python") {
+    if (p === "main.py") {
+      return [
+        "from fastapi import FastAPI",
+        "import uvicorn",
+        "",
+        `app = FastAPI(title=\"${input.plan.projectName}\", version=\"1.0.0\")`,
+        "",
+        "@app.get(\"/health\")",
+        "async def health() -> dict[str, str]:",
+        "  return {\"status\": \"ok\"}",
+        "",
+        "if __name__ == \"__main__\":",
+        "  uvicorn.run(app, host=\"0.0.0.0\", port=8000)",
+        "",
+      ].join("\n");
+    }
+    if (p === "requirements.txt") {
+      return ["fastapi==0.116.1", "uvicorn==0.35.0", "pydantic==2.11.7", ""].join("\n");
+    }
+    if (p === "README.md") {
+      return [
+        `# ${input.plan.projectName}`,
+        "",
+        input.plan.description || "Generated backend project.",
+        "",
+        "## Run",
+        "",
+        "1. Install dependencies from `requirements.txt`.",
+        "2. Start the service: `python main.py`.",
+        "",
+      ].join("\n");
+    }
+  } else {
+    if (p === "package.json") {
+      return JSON.stringify(
+        {
+          name: input.plan.projectName.toLowerCase().replace(/[^a-z0-9-]/g, "-") || "generated-project",
+          version: "1.0.0",
+          private: true,
+          scripts: {
+            dev: "tsx src/index.ts",
+            start: "node dist/index.js",
+            build: "tsc",
+          },
+          dependencies: {
+            express: "^4.21.2",
+            dotenv: "^16.6.1",
+          },
+          devDependencies: {
+            tsx: "^4.20.6",
+            typescript: "^5.9.2",
+            "@types/node": "^24.6.0",
+            "@types/express": "^5.0.3",
+          },
+        },
+        null,
+        2,
+      );
+    }
+    if (p === "tsconfig.json") {
+      return JSON.stringify(
+        {
+          compilerOptions: {
+            target: "ES2022",
+            module: "CommonJS",
+            moduleResolution: "Node",
+            rootDir: "src",
+            outDir: "dist",
+            strict: true,
+            esModuleInterop: true,
+            skipLibCheck: true,
+          },
+          include: ["src"],
+        },
+        null,
+        2,
+      );
+    }
+    if (p === "src/index.ts") {
+      return [
+        'import "dotenv/config";',
+        'import express from "express";',
+        "",
+        "const app = express();",
+        "app.use(express.json());",
+        "",
+        "app.get(\"/health\", (_req, res) => {",
+        "  res.json({ status: \"ok\" });",
+        "});",
+        "",
+        "const port = Number(process.env.PORT ?? 3000);",
+        "app.listen(port, () => {",
+        "  console.log(`Server running on port ${port}`);",
+        "});",
+        "",
+      ].join("\n");
+    }
+    if (p === "README.md") {
+      return [
+        `# ${input.plan.projectName}`,
+        "",
+        input.plan.description || "Generated backend project.",
+        "",
+        "## Run",
+        "",
+        "1. `npm install`",
+        "2. `npm run dev`",
+        "",
+      ].join("\n");
+    }
+  }
+  if (p === ".env.example") {
+    return "PORT=3000\n";
+  }
+  if (p === "Dockerfile") {
+    return input.language === "python"
+      ? [
+          "FROM python:3.12-slim",
+          "WORKDIR /app",
+          "COPY . .",
+          "RUN pip install --no-cache-dir -r requirements.txt",
+          'CMD ["python", "main.py"]',
+          "",
+        ].join("\n")
+      : [
+          "FROM node:20-alpine",
+          "WORKDIR /app",
+          "COPY package*.json ./",
+          "RUN npm install",
+          "COPY . .",
+          "RUN npm run build",
+          'CMD ["npm", "run", "start"]',
+          "",
+        ].join("\n");
+  }
+  const banner =
+    input.language === "python"
+      ? `\"\"\"${d}\nGenerated as a fallback due to temporary AI output issues.\"\"\"\n`
+      : `/**\n * ${d}\n * Generated as a fallback due to temporary AI output issues.\n */\n`;
+  return banner;
+}
 function normalizeArchitecturePlan(
   raw: unknown,
   input: { nodes: unknown[]; language: GenLanguage },
@@ -510,15 +660,28 @@ export async function POST(req: NextRequest) {
       filesToGenerate,
       concurrency,
       async (file) => {
-        const code = await genCodeAi({
-          filePath: file.path,
-          description: file.description,
-          fullPlan: architecturePlan,
-          language,
-          rotator,
-          usedProvider,
-          onRequest,
-        });
+        let code = "";
+        try {
+          code = await genCodeAi({
+            filePath: file.path,
+            description: file.description,
+            fullPlan: architecturePlan,
+            language,
+            rotator,
+            usedProvider,
+            onRequest,
+          });
+        } catch (error) {
+          if (error instanceof QuotaExceededError) throw error;
+          const msg = error instanceof Error ? error.message : String(error);
+          console.warn(`[gen] Falling back for file ${file.path}: ${msg}`);
+          code = buildFallbackFileContent({
+            filePath: file.path,
+            language,
+            description: file.description,
+            plan: architecturePlan,
+          });
+        }
         return [file.path, code] as const;
       },
     );
@@ -625,9 +788,12 @@ ${JSON.stringify({ nodes: input.nodes, edges: input.edges, techStack: input.tech
     });
   } catch (error) {
     if (error instanceof QuotaExceededError) throw error;
-    console.error("PLAN ARCHITECTURE ERROR:", error);
     const msg = error instanceof Error ? error.message : String(error);
-    throw new Error(`Architecture planning failed: ${msg}`);
+    console.warn(`[gen] Falling back to local architecture plan: ${msg}`);
+    return buildFallbackArchitecturePlan({
+      nodes: input.nodes,
+      language: input.language,
+    });
   }
 }
 const EMPTY_FILE_RE = [/\.gitkeep$/, /\.gitignore$/, /__init__\.py$/, /pyproject\.toml$/];

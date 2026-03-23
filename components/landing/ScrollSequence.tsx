@@ -257,8 +257,8 @@ function StepTwoVisual() {
             Runtime scaffold
           </div>
           <div className="space-y-2">
-            <div className="text-[#00F0FF]">import {"{ PrismaClient }"} from "@prisma/client";</div>
-            <div className="text-[#00F0FF]">import {"{ Router }"} from "express";</div>
+            <div className="text-[#00F0FF]">{'import { PrismaClient } from "@prisma/client";'}</div>
+            <div className="text-[#00F0FF]">{'import { Router } from "express";'}</div>
             <div className="h-px w-full bg-white/[0.06]" />
             {codeLines.map((line, index) => (
               <motion.div

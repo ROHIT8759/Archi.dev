@@ -421,7 +421,7 @@ export function PropertyInspector({ width = 320 }: { width?: number }) {
       ? { border: "1px solid #ef4444", boxShadow: "0 0 0 2px rgba(239,68,68,0.15)" }
       : {};
   };
-  const RequiredStar = ({ keywords }: { keywords: string[] }) => {
+  const renderRequiredStar = (...keywords: string[]) => {
     const hasMatch = nodeIssues.some((issue) => {
       const hay = `${issue.title} ${issue.detail ?? ""}`.toLowerCase();
       return keywords.some((kw) => hay.includes(kw));
@@ -942,7 +942,7 @@ export function PropertyInspector({ width = 320 }: { width?: number }) {
       <div>
         <div style={labelStyle}>
           Label
-          <RequiredStar keywords={["no label", "label is empty", "label missing", "needs a label"]} />
+          {renderRequiredStar("no label", "label is empty", "label missing", "needs a label")}
         </div>
         <input
           type="text"
@@ -4274,7 +4274,7 @@ export function PropertyInspector({ width = 320 }: { width?: number }) {
               <div style={{ width: 100 }}>
                 <div style={labelStyle}>
                   Method
-                  <RequiredStar keywords={["no method", "method is empty", "http method"]} />
+                  {renderRequiredStar("no method", "method is empty", "http method")}
                 </div>
                 <select
                   value={(nodeData as ApiBinding).method}
@@ -4295,7 +4295,7 @@ export function PropertyInspector({ width = 320 }: { width?: number }) {
               <div style={{ flex: 1 }}>
                 <div style={labelStyle}>
                   Route
-                  <RequiredStar keywords={["no route", "route is empty", "route missing", "needs a route"]} />
+                  {renderRequiredStar("no route", "route is empty", "route missing", "needs a route")}
                 </div>
                 <input
                   type="text"

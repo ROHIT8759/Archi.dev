@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import type { Prisma } from "@prisma/client";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { ensureUser, requireCredits } from "@/lib/credit";
@@ -120,8 +121,8 @@ export async function POST(req: NextRequest) {
         userId: user.id,
         tab: parsed.data.tab,
         title: parsed.data.title,
-        content: parsed.data.content as any,
-        metadata: parsed.data.metadata as any,
+        content: parsed.data.content as Prisma.InputJsonValue,
+        metadata: parsed.data.metadata as Prisma.InputJsonValue | undefined,
         version: 1,
         documentSetId: parsed.data.documentSetId,
       },
