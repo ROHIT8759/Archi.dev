@@ -1,547 +1,343 @@
-﻿# Ermiz Studio
+﻿# Archi.dev
 
-Forget about syntax language or framework, design systems that scales and last for decades  
+Archi.dev is a visual backend architecture studio for designing APIs, workflows, infrastructure, and agent-oriented execution graphs before writing code.
 
-![Preview](/public/preview.png)
+It combines a multi-tab canvas, deterministic graph models, architecture validation, optional AI-assisted graph generation, OpenAPI export, and runtime simulation in a single Next.js application.
 
----
+![Preview](public/preview.png)
 
-## Architecture
+## Overview
 
-A detailed look at the system architecture and data flows using Mermaid diagrams.
+Archi.dev is built around a simple idea: backend systems should be modeled explicitly.
 
-### 1. High-Level System Architecture
-```mermaid
-graph TD
-    User([End User]) -->|Web Interface| WebClient[Next.js 16 + React 19 Client]
+Instead of burying architecture inside scattered source files, the studio lets you define:
 
-    subgraph "Frontend Layer"
-        WebClient -->|State Management| ZustandStore[Zustand Store]
-        WebClient -->|Canvas UI| CanvasEditor[XYFlow Editor]
-        WebClient -->|Data Validation| Zod[Zod Schema]
-    end
+- APIs and contracts
+- background and synchronous processes
+- database and infrastructure capabilities
+- service boundaries
+- agent execution plans and graph patches
 
-    WebClient -->|REST/App Router| NextJSApp[Next.js Backend Server]
-    NextJSApp -->|Token / OAuth| SupabaseAuth[(Supabase Auth)]
-    NextJSApp -->|Prisma Client| PostgreSQL[(PostgreSQL DB)]
+The visual workspace is backed by structured graph data, not opaque editor state.
 
-    subgraph "AI Compiler / Recommendation Layer"
-        NextJSApp -->|Spec & JSON| AIService[AI Code Generator]
-        AIService -->|Generated Code / Suggestions| NextJSApp
-    end
+## Core Features
 
-    classDef db fill:#f9f,stroke:#333,stroke-width:2px;
-    class SupabaseAuth,PostgreSQL db;
+### Multi-tab backend workspace
+
+The studio is split into focused tabs:
+
+- `api`
+- `database`
+- `functions`
+- `agent`
+
+Each tab has its own graph while still participating in a shared system model.
+
+### Canvas-based architecture modeling
+
+You can compose systems using React Flow nodes for:
+
+- API bindings
+- processes and workflows
+- databases and queues
+- infrastructure blocks
+- service boundaries
+- API endpoint references
+
+### Passive architecture validation
+
+The app continuously validates the workspace and surfaces:
+
+- node-level validation badges
+- architecture warnings and errors
+- generation-readiness checks before code export
+
+### OpenAPI and docs export
+
+The studio can export the current API graph as:
+
+- `openapi.json`
+- `api-docs.md`
+
+These are bundled into a downloadable ZIP via `/api/openapi`.
+
+### Agent workspace
+
+The agent tab can:
+
+- inspect the full workspace graph collection
+- generate an execution plan
+- summarize architecture state
+- optionally apply agent-oriented graph patches
+
+### AI-assisted graph generation
+
+Canvas Copilot can generate or extend architecture graphs from prompts using the existing graph context.
+
+### Runtime simulation
+
+The project includes runtime APIs to load active graphs and execute runtime requests against the modeled system.
+
+## Tech Stack
+
+### Frontend
+
+- Next.js 16
+- React 19
+- TypeScript
+- React Flow (`@xyflow/react`)
+- Zustand
+- Tailwind CSS v4
+- Lucide React
+
+### Backend
+
+- Next.js App Router route handlers
+- Prisma ORM
+- PostgreSQL
+- Supabase Auth
+- Zod validation
+
+### AI / generation
+
+- Google GenAI SDK
+- Groq SDK
+- JSZip
+
+### Testing
+
+- Vitest
+- Playwright
+
+## Project Structure
+
+```text
+app/                 Next.js App Router pages and route handlers
+components/          Canvas, studio, landing, and panel UI
+lib/                 Runtime logic, schemas, API generators, utilities
+store/               Zustand graph/workspace state
+prisma/              Prisma schema
+public/              Static assets
+scripts/             Helper scripts
+tests/               Unit and e2e tests
+doc/                 Product and architecture notes
 ```
 
-### 2. User Data Flow & Interactions
-```mermaid
-sequenceDiagram
-    participant Architect as System Architect
-    participant Canvas as XYFlow Canvas
-    participant Store as Zustand
-    participant NextJS as NextJS API
-    participant DB as PostgreSQL
-
-    Architect->>Canvas: Drag & Drop Node / Capability
-    Canvas->>Store: Publish State Change
-    Store->>Store: Validate using Zod
-    Store-->>Canvas: Re-render valid UI Connections
-    Architect->>Canvas: Save "Process" or "API" Spec
-    Canvas->>NextJS: POST /api/documents (JSON payload)
-    NextJS->>NextJS: Deduct 1 Credit
-    NextJS->>DB: Upsert Document (JSONB format)
-    DB-->>NextJS: Update Confirmed
-    NextJS-->>Canvas: Success State
-```
-
-### 3. Developer / CI-CD Flow
-```mermaid
-flowchart LR
-    Dev([Developer]) -->|git clone & pnpm install| LocalEnv[Local Environment]
-    LocalEnv -->|prisma generate| Prisma[Prisma ORM]
-    LocalEnv -->|dev server| Browser(Local Testing)
-    Dev -->|Push Code| GitHub[GitHub Repo]
-    GitHub -->|Webhook Trigger| Vercel[Vercel CI/CD]
-    Vercel -->|Build & Migrate| ProdBuild[Production Artifact]
-    ProdBuild -->|Deploy| LiveApp[Live SaaS Platform]
-```
-
-### 4. AI Recommendation & Compiler Flow
-```mermaid
-stateDiagram-v2
-    direction TB
-    state "Canvas Source" as Canvas {
-        Nodes
-        Edges
-        Properties
-    }
-    
-    state "Canonical Specs" as Specs {
-        OpenAPI
-        AsyncAPI
-        JSON_Processes
-        JSON_Infra
-    }
-
-    state "AI Recommendation & Code Gen" as AICore {
-        Prompt_Builder
-        LLM_Execution
-        Response_Parser
-    }
-    
-    state "Output Deliverables" as Outputs {
-        Generated_Backend_Functions
-        Infrastructure_Bindings
-        AI_Suggestions
-    }
-
-    Canvas --> Specs : Deterministic Export
-    Specs --> AICore : Base Source of Truth
-    AICore --> Outputs : Generates Functional Code / Hints
-    Outputs --> Specs : (Never Overwrites Directly)
-```
-
-### 5. Database ER Diagram
-```mermaid
-erDiagram
-    User ||--o{ CreditBalance : owns
-    User ||--o{ CreditTransaction : executes
-    User ||--o{ DocumentSet : groups
-    User ||--o{ Document : creates
-    DocumentSet ||--o{ Document : contains
-    
-    User {
-        String id PK
-        String email
-        String name
-    }
-    
-    CreditBalance {
-        String id PK
-        String userId FK
-        BigInt availableCredits
-        BigInt monthlyFreeCredits
-    }
-    
-    CreditTransaction {
-        String id PK
-        String userId FK
-        TransactionKind kind "usage | topup"
-        BigInt amount
-    }
-
-    Document {
-        String id PK
-        String userId FK
-        String documentSetId FK
-        TabKind tab "api | process | infrastructure | schema"
-        Json content "Visual Node Graph"
-        Json metadata
-    }
-```
-
-### 6. Functional Endpoints Data Architecture
-```mermaid
-graph LR
-    subgraph Credit Functions
-        GET_Credits[GET /api/credits - Check Balance]
-        POST_Use[POST /api/credits/use - Consume]
-        POST_Dummy[POST /api/payments/dummy - TopUp]
-    end
-    
-    subgraph Document Functions
-        GET_Docs[GET /api/documents]
-        POST_Docs[POST /api/documents - Create & Charge]
-        PATCH_Doc[PATCH /api/documents/:id - Update]
-        DEL_Doc[DELETE /api/documents/:id]
-    end
-
-    subgraph Document Set Functions
-        GET_Sets[GET /api/document-sets]
-        POST_Sets[POST /api/document-sets]
-    end
-
-    Middleware{Supabase Auth Middleware}
-    
-    Client((App Router Client)) --> Middleware
-    Middleware -->|Authorized Session| GET_Credits
-    Middleware -->|Authorized Session| POST_Use
-    Middleware -->|Authorized Session| POST_Dummy
-    Middleware -->|Authorized Session| GET_Docs
-    Middleware -->|Authorized Session| POST_Docs
-    Middleware -->|Authorized Session| PATCH_Doc
-    Middleware -->|Authorized Session| DEL_Doc
-    Middleware -->|Authorized Session| GET_Sets
-    Middleware -->|Authorized Session| POST_Sets
-    Middleware -->|Unauthenticated| Redirect[Redirect /login]
-```
-
----
-
-## Product & Tech Stack
-
-### Product overview
-
-- Visual backend design platform to model APIs, processes, and infrastructure as explicit specs.
-- Generates canonical OpenAPI / AsyncAPI plus plain JSON for the rest.
-- The editor is a projection of the source files â€” no hidden logic.
-- Optional AI compilation step that generates code without changing the specs.
-
-### Tech stack
-
-- Frontend: Next.js 16 (App Router), React 19, TypeScript.
-- UI: Tailwind CSS v4, XYFlow (node editor), Lucide icons, `clsx` + `tailwind-merge`.
-- State & validation: Zustand for client state, Zod for schema validation.
-- Backend: Next.js route handlers for API endpoints.
-- Data: PostgreSQL + Prisma ORM, JSONB documents for design artifacts.
-- Auth: Supabase Auth with Google OAuth, enforced via middleware.
-
----
-
-## Backend (Prisma + Postgres)
-
-### Setup
-
-- Copy `.env.example` to `.env` and set `DATABASE_URL` to your Postgres instance. Defaults assume schema `public`.
-- Install dependencies and generate the Prisma client: `npm install && npm run prisma:generate`.
-- Create/migrate the database: `npm run prisma:migrate -- --name init`.
-
-### Data model (high level)
-
-- Users with per-user credit balance and ledger (monthly free grant + dummy payments).
-- Documents stored per tab (`tab` enum) with JSONB `content` and optional `metadata`; `DocumentSet` groups multiple documents for a tab.
-
-### API routes (app router)
-
-- `GET /api/credits` â€” returns refreshed credit balance (applies monthly free grant based on `FREE_RESET_DAY_OF_MONTH`).
-- `POST /api/credits/use` â€” consume credits; rejects if over balance.
-- `POST /api/payments/dummy` â€” adds credits via dummy payment.
-- `GET/POST /api/documents` â€” list or create JSON documents per tab (charges 1 credit on create).
-- `GET/PATCH/DELETE /api/documents/:id` â€” read/update/delete a document (update charges 1 credit).
-- `GET/POST /api/document-sets` â€” manage document collections per tab.
-
-Auth uses Supabase with Google OAuth. All protected routes are enforced by `middleware.ts`; if the Supabase session cookie is missing/expired, the user is redirected to `/login`.
-
-### Authentication (Supabase)
-
-- Configure Supabase project and enable Google OAuth. Set `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` in `.env`.
-- Redirect URL in Supabase should include `http://localhost:3000/auth/callback` for local dev.
-- Login page at `/login` triggers `signInWithOAuth` (Google). The OAuth code is exchanged at `/auth/callback`, setting httpOnly Supabase auth cookies.
-- Middleware refreshes access tokens using the Supabase refresh token; if refresh fails, the user is sent back to `/login`.
-
----
-
-## What This Is
-
-This project is a **visual backend design platform** inspired by node-based systems (like n8n), but built for **real backend engineering**, not low-code demos.
-
-You design:
-
-- **External APIs** (REST, Events, WebSockets)
-- **Internal processes** (functions, workflows, jobs)
-- **Infrastructure** (databases, queues)
-
-All of this is expressed as:
-
-- **Industry-standard specifications** (OpenAPI / AsyncAPI)
-- **Plain, structured JSON** for everything else
-
-There is no hidden logic.
-There is no magic.
-What you see is what gets built.
-
----
-
-## What It Does
-
-### 1. Designs APIs Correctly
-
-- REST APIs â†’ OpenAPI
-- Event / WebSocket APIs â†’ AsyncAPI
-
-Each API:
-
-- Is created by choosing its **type first**
-- Generates **one canonical spec file**
-- Contains **no business logic**
-
-APIs describe **how your system is called**, not how it works.
-
----
-
-### 2. Designs Internal Processes Explicitly
-
-Processes are first-class citizens.
-
-You can design:
-
-- Calculations
-- Database workflows
-- Background jobs
-- Queue consumers
-- Scheduled tasks
-
-Each process explicitly declares:
-
-- Name
-- Type
-- Execution model (sync / async / scheduled / event-driven)
-- Inputs (typed)
-- Outputs (typed, including errors)
-- Step-by-step execution graph
-
-Processes are expressed in **plain JSON**, not code.
-
----
-
-### 3. Models Infrastructure as Capabilities
-
-Databases, queues, and similar systems are **not helpers** â€” they are **capability boundaries**.
-
-Infrastructure blocks declare:
-
-- What they are (SQL, NoSQL, queue, etc.)
-- What they support (transactions, retries, joins, etc.)
-- Where and how they can be used
-
-Nothing is assumed.
-Nothing is implicit.
-
----
-
-### 4. Keeps a Single Source of Truth (Per Concern)
-
-There is no â€œvisual-onlyâ€ state.
-
-| Concern            | Source of Truth |
-| ------------------ | --------------- |
-| REST APIs          | OpenAPI         |
-| Event / WS APIs    | AsyncAPI        |
-| Processes          | Plain JSON      |
-| Databases / Queues | Plain JSON      |
-| Schemas            | Shared registry |
-
-The visual editor is a **projection**, not the truth.
-
----
-
-### 5. Uses AI Safely (Optional)
-
-AI is an **extension**, not the foundation.
-
-AI can:
-
-- Generate process graphs from descriptions
-- Suggest missing fields or validations
-- Generate backend code from specs + JSON
-
-AI cannot:
-
-- Invent architecture
-- Modify definitions silently
-- Bypass declared inputs/outputs
-- Replace specs with â€œbest guessesâ€
-
-You stay in control.
-
----
-
-## How It Works (High Level)
-
-### Step 1: Choose What Youâ€™re Designing
-
-- API (REST / Event)
-- Process
-- Infrastructure
-
-This choice **locks the rules**.
-
----
-
-### Step 2: Use a Spec-Aware Canvas
-
-- Nodes available depend on what youâ€™re designing
-- Invalid connections are impossible
-- Everything you place maps deterministically to source files
-
-The editor enforces correctness **by construction**.
-
----
-
-### Step 3: Generate Canonical Outputs
-
-- APIs â†’ OpenAPI / AsyncAPI
-- Processes â†’ JSON
-- Infrastructure â†’ JSON
-
-All outputs are:
-
-- Deterministic
-- Versionable
-- Machine-readable
-- Human-auditable
-
----
-
-### Step 4: (Optional) Compile With AI
-
-AI consumes the generated files and produces:
-
-- Backend code
-- Infrastructure bindings
-- Client SDKs
-
-The specs and JSON remain the authority.
-
----
-
-## Design Principles
-
-- **Structure over decoration**
-- **Editing is cheaper than rebuilding**
-- **No implicit behavior**
-- **No proprietary formats**
-- **No universal-spec fantasies**
-
-> Universality lives in the editor, not the document.
-
----
-
-## What This Is NOT
-
-- âŒ A low-code platform
-- âŒ A diagramming tool
-- âŒ A visual scripting language
-- âŒ An OpenAPI replacement
-- âŒ An AI-first system
-
-If it hides structure, itâ€™s out of scope.
-
----
-
-## Mental Model
-
-> **Figma for backend systems**
->
-> - APIs = contracts
-> - Processes = execution
-> - Infrastructure = capabilities
-> - AI = compiler
-
----
-
-## Who This Is For
-
-- Backend engineers who want **clarity before code**
-- Teams that care about **long-term maintainability**
-- Developers who like AI but **donâ€™t trust it blindly**
-- Anyone tired of undocumented backend behavior
-
----
-
-## Why This Exists
-
-Most backend tools fail in one of two ways:
-
-1. Too abstract â†’ not real
-2. Too manual â†’ too slow
-
-This tool sits in between:
-
-- Explicit enough to be correct
-- Visual enough to be fast
-- Structured enough for AI
-- Honest enough for engineers
-
----
-
-## Status
-
-Early-stage, design-driven.
-APIs and schemas are expected to evolve.
-
-Breaking changes are acceptable **until v1**.
-
----
-
-## Future Scope (Not Promises)
-
-- GraphQL support
-- RPC / Protobuf
-- Multi-service projects
-- Policy and auth modeling
-- Infra export (Terraform, etc.)
-
-Only when they fit the model.
-
----
-
-## Final Note
-
-If this ever becomes:
-
-- Harder to change than to rebuild
-- Less explicit than code
-- More magical than honest
-
-Then it has failed.
-
----
-
-## Quick Start
+## Key Routes
+
+### App pages
+
+- `/`
+- `/studio`
+- `/login`
+
+### API routes
+
+- `/api/copilot`
+- `/api/openapi`
+- `/api/agent`
+- `/api/gen`
+- `/api/runtime/start`
+- `/api/runtime/stream`
+- `/api/run/[...path]`
+- `/api/documents`
+- `/api/document-sets`
+- `/api/credits`
+
+## Local Development
 
 ### Prerequisites
 
 - Node.js 20+
-- pnpm (or npm)
-- A [Supabase](https://supabase.com) project with Google OAuth enabled
-- A PostgreSQL database (Supabase provides one — no separate DB needed)
+- npm 10+
+- PostgreSQL
+- Supabase project for auth
 
-### 1. Clone & install
-
-```bash
-git clone https://github.com/ROHIT8759/Ermiz_Studio.git
-cd Ermiz_Studio
-pnpm install
-```
-
-### 2. Configure environment
+### Install dependencies
 
 ```bash
-cp .env.example .env
-# Fill in NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY,
-# SUPABASE_SERVICE_ROLE_KEY, DATABASE_URL, and DIRECT_URL
+npm install
 ```
 
-Set `http://localhost:3000/auth/callback` as an allowed redirect URL in your
-Supabase project's **Authentication  URL Configuration**.
+### Environment variables
 
-### 3. Migrate the database
+Create a `.env` file and configure the required values.
+
+Typical variables used by the app include:
 
 ```bash
-pnpm run prisma:migrate -- --name init
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+DATABASE_URL=
+DIRECT_URL=
+FREE_RESET_DAY_OF_MONTH=1
 ```
 
-### 4. Run locally
+For Google OAuth via Supabase, ensure your callback URL includes:
 
 ```bash
-pnpm run dev
-# Open http://localhost:3000
+http://localhost:3000/auth/callback
 ```
 
----
+### Prisma setup
+
+```bash
+npm run prisma:generate
+npm run prisma:migrate -- --name init
+```
+
+### Start development server
+
+```bash
+npm run dev
+```
+
+Open:
+
+```bash
+http://localhost:3000
+```
+
+## Available Scripts
+
+```bash
+npm run dev
+npm run build
+npm run start
+npm run lint
+npm run test
+npm run test:watch
+npm run test:coverage
+npm run test:e2e
+npm run test:e2e:ui
+npm run prisma:generate
+npm run prisma:migrate -- --name <migration_name>
+npm run runtime:worker
+```
+
+## Build Notes
+
+Production builds use:
+
+```bash
+next build --webpack
+```
+
+The project was switched to the webpack build path because the default Turbopack build path was unstable in this Windows environment.
+
+## Authentication
+
+Authentication is handled with Supabase.
+
+- browser auth uses a lazy Supabase client getter
+- server auth uses SSR-aware Supabase helpers
+- protected routes rely on middleware/session checks
+- `/login` triggers Google OAuth sign-in
+- `/auth/callback` exchanges the auth code and restores the session
+
+## Data Model
+
+At a high level, the app persists:
+
+- users
+- credit balances and credit transactions
+- document sets
+- graph-like documents per workspace/tab
+
+Prisma is the source of truth for the persisted relational model.
+
+## Architecture Model
+
+The application uses graph data as a structured representation of backend systems.
+
+Important concepts include:
+
+- API bindings as contracts
+- process nodes as execution definitions
+- infrastructure blocks as capabilities
+- service boundaries as policy and ownership boundaries
+- validation as a first-class concern
+
+## OpenAPI Export Flow
+
+OpenAPI export works by:
+
+1. collecting the current API graph from the studio state
+2. sending it to `/api/openapi`
+3. extracting `api_binding` nodes
+4. generating:
+   - workspace OpenAPI JSON
+   - Markdown API docs
+5. returning both files in a ZIP archive
+
+## Agent Workspace Flow
+
+The agent workspace works by:
+
+1. collecting the active graph and all workspace graphs
+2. posting them to `/api/agent`
+3. generating:
+   - execution plan
+   - architecture summary
+   - optional graph patch
+4. optionally applying returned nodes/edges back into the current graph
+
+## Testing
+
+### Unit tests
+
+```bash
+npm run test
+```
+
+### E2E tests
+
+```bash
+npm run test:e2e
+```
+
+### Lint
+
+```bash
+npm run lint
+```
 
 ## Deployment
 
-### Vercel (recommended)
+### Recommended
 
-1. Push to GitHub and import the repository in [Vercel](https://vercel.com).
-2. Add all variables from `.env.example` in the Vercel project settings.
-3. Add your Vercel production URL to Supabase's allowed redirect URLs.
-4. Deploy — `pnpm run build` runs automatically.
+Deploy on Vercel with:
 
-### Database migrations on deploy
+- all required environment variables configured
+- a reachable Postgres database
+- Supabase redirect URLs updated for production
 
-Run `pnpm run prisma:migrate -- --name <change>` locally before pushing, or
-integrate `prisma migrate deploy` into your CI pipeline.
+### Production checklist
+
+- set all env vars
+- run Prisma migrations
+- verify Supabase OAuth callback URLs
+- confirm build passes with `npm run build`
+
+## Current Status
+
+The project currently includes:
+
+- studio foundations
+- template loading
+- auto-layout
+- passive validation
+- Canvas Copilot
+- OpenAPI/docs export
+- agent execution planning
+- runtime graph execution routes
+
+## Notes
+
+- The `middleware.ts` convention currently produces a Next.js deprecation warning suggesting `proxy`.
+- This is a warning, not a current build blocker.
+
+## License
+
+See `LICENSE`.
