@@ -1,6 +1,23 @@
 "use client";
 import { useRef, useState, useEffect, type ReactNode } from "react";
 import { motion, useInView } from "framer-motion";
+import { Globe3D, type GlobeMarker } from "@/components/ui/3d-globe";
+
+const globeMarkers: GlobeMarker[] = [
+  { lat: 40.7128, lng: -74.006, src: "https://assets.aceternity.com/avatars/1.webp", label: "New York" },
+  { lat: 51.5074, lng: -0.1278, src: "https://assets.aceternity.com/avatars/2.webp", label: "London" },
+  { lat: 35.6762, lng: 139.6503, src: "https://assets.aceternity.com/avatars/3.webp", label: "Tokyo" },
+  { lat: -33.8688, lng: 151.2093, src: "https://assets.aceternity.com/avatars/4.webp", label: "Sydney" },
+  { lat: 48.8566, lng: 2.3522, src: "https://assets.aceternity.com/avatars/5.webp", label: "Paris" },
+  { lat: 28.6139, lng: 77.209, src: "https://assets.aceternity.com/avatars/6.webp", label: "New Delhi" },
+  { lat: 55.7558, lng: 37.6173, src: "https://assets.aceternity.com/avatars/7.webp", label: "Moscow" },
+  { lat: -22.9068, lng: -43.1729, src: "https://assets.aceternity.com/avatars/8.webp", label: "Rio de Janeiro" },
+  { lat: 31.2304, lng: 121.4737, src: "https://assets.aceternity.com/avatars/9.webp", label: "Shanghai" },
+  { lat: 25.2048, lng: 55.2708, src: "https://assets.aceternity.com/avatars/10.webp", label: "Dubai" },
+  { lat: -34.6037, lng: -58.3816, src: "https://assets.aceternity.com/avatars/11.webp", label: "Buenos Aires" },
+  { lat: 1.3521, lng: 103.8198, src: "https://assets.aceternity.com/avatars/12.webp", label: "Singapore" },
+  { lat: 37.5665, lng: 126.978, src: "https://assets.aceternity.com/avatars/13.webp", label: "Seoul" },
+];
 const terminalLines = [
   { text: "$ archi deploy --env production", color: "rgba(255,255,255,0.28)" },
   { text: "✓ Building Docker image…", color: "#00F0FF" },
@@ -295,6 +312,49 @@ export default function BentoGrid() {
               effort, full coverage.
             </p>
             <SwaggerMock />
+          </SpotlightCard>
+
+          <SpotlightCard
+            colSpan="md:col-span-3"
+            accentColor="rgba(0,240,255,0.05)"
+            className="overflow-hidden"
+          >
+            <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
+              <div className="flex-1 shrink-0 max-w-sm">
+                <div className="text-[10px] font-bold text-[#00F0FF] uppercase tracking-[0.22em] mb-2">
+                  Global
+                </div>
+                <h3 className="text-xl font-semibold text-white tracking-tight">
+                  Deploy Anywhere, Instantly.
+                </h3>
+                <p className="text-sm text-white/40 mt-2 leading-relaxed">
+                  Infrastructure available across every major region. Ship to the edge closest to your users — no extra config required.
+                </p>
+                <div className="mt-6 flex flex-col gap-2.5">
+                  {["13 global regions", "Sub-50ms cold starts", "Automatic failover", "Zero-downtime deploys"].map((feat) => (
+                    <div key={feat} className="flex items-center gap-2.5 text-xs text-white/50">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#00F0FF] shrink-0" />
+                      {feat}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="flex-1 w-full max-w-2xl -my-8 -mr-8">
+                <Globe3D
+                  markers={globeMarkers}
+                  config={{
+                    atmosphereColor: "#00F0FF",
+                    atmosphereIntensity: 8,
+                    showAtmosphere: true,
+                    bumpScale: 5,
+                    autoRotateSpeed: 0.3,
+                    enableZoom: false,
+                    enablePan: false,
+                  }}
+                  className="h-[380px]"
+                />
+              </div>
+            </div>
           </SpotlightCard>
         </div>
       </div>
