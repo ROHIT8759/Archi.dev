@@ -77,68 +77,130 @@ function useSegmentY(
 
 function StepOneVisual() {
   const nodes = [
-    { label: "Gateway", x: "14%", y: "20%", color: "#00F0FF" },
-    { label: "Auth", x: "70%", y: "16%", color: "#8A2BE2" },
-    { label: "Queue", x: "18%", y: "68%", color: "#F5A623" },
-    { label: "Postgres", x: "72%", y: "66%", color: "#28C840" },
+    { label: "Gateway", x: "10%", y: "18%", color: "#00F0FF", latency: "12ms" },
+    { label: "Auth", x: "68%", y: "14%", color: "#8A2BE2", latency: "8ms" },
+    { label: "Queue", x: "12%", y: "66%", color: "#F5A623", latency: "3ms" },
+    { label: "Postgres", x: "70%", y: "64%", color: "#28C840", latency: "21ms" },
   ];
 
   return (
     <div className="absolute inset-0 overflow-hidden rounded-[2rem] bg-[#05070d]">
-      <div className="absolute inset-0 opacity-[0.16]" style={{ backgroundImage: "radial-gradient(circle at center, rgba(255,255,255,0.8) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+      {/* Dot grid */}
+      <div
+        className="absolute inset-0 opacity-[0.14]"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at center, rgba(255,255,255,0.85) 1px, transparent 1px)",
+          backgroundSize: "22px 22px",
+        }}
+      />
+      {/* Ambient glow */}
       <motion.div
-        className="absolute left-1/2 top-1/2 h-[16rem] w-[16rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-400/10"
-        animate={{ scale: [0.92, 1.04, 0.92], opacity: [0.24, 0.42, 0.24] }}
+        className="absolute left-1/2 top-1/2 h-[20rem] w-[20rem] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{ background: "radial-gradient(circle, rgba(0,240,255,0.08) 0%, transparent 70%)" }}
+        animate={{ scale: [1, 1.12, 1], opacity: [0.6, 1, 0.6] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      {/* Outer orbit ring */}
+      <motion.div
+        className="absolute left-1/2 top-1/2 h-[15rem] w-[15rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-400/[0.12]"
+        animate={{ scale: [0.94, 1.06, 0.94], opacity: [0.3, 0.5, 0.3] }}
         transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
       />
+
+      {/* Center hub */}
       <motion.div
-        className="absolute left-1/2 top-1/2 h-[9rem] w-[9rem] -translate-x-1/2 -translate-y-1/2 rounded-[2rem] border border-cyan-400/25 bg-cyan-400/5"
-        animate={{ rotate: [0, 45, 0], scale: [1, 1.05, 1] }}
-        transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
+        className="absolute left-1/2 top-1/2 h-[5rem] w-[5rem] -translate-x-1/2 -translate-y-1/2 rounded-[1.25rem] border border-cyan-400/30 bg-cyan-400/[0.07] backdrop-blur-sm"
+        animate={{ rotate: [0, 360] }}
+        transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
       >
-        <div className="absolute inset-6 rounded-[1.25rem] border border-cyan-300/30" />
+        <div className="absolute inset-2 rounded-[0.75rem] border border-cyan-300/20 flex items-center justify-center">
+          <span className="text-[8px] font-bold uppercase tracking-widest text-cyan-400/60">Core</span>
+        </div>
       </motion.div>
 
-      <svg className="absolute inset-0 h-full w-full opacity-60" viewBox="0 0 800 560" preserveAspectRatio="none">
+      {/* Animated connection paths */}
+      <svg className="absolute inset-0 h-full w-full" viewBox="0 0 800 520" preserveAspectRatio="none">
+        {/* Gateway → Core */}
         <motion.path
-          d="M150 120 C280 180, 350 180, 470 130"
-          fill="none"
-          stroke="#00F0FF"
-          strokeWidth="2"
-          strokeDasharray="6 8"
+          d="M130 105 C260 160, 320 200, 400 260"
+          fill="none" stroke="#00F0FF" strokeWidth="1.5" strokeDasharray="5 7"
+          animate={{ strokeDashoffset: [0, -24] }}
+          transition={{ duration: 1.4, repeat: Infinity, ease: "linear" }}
+        />
+        {/* Auth → Core */}
+        <motion.path
+          d="M590 85 C510 150, 460 200, 400 260"
+          fill="none" stroke="#8A2BE2" strokeWidth="1.5" strokeDasharray="5 7"
+          animate={{ strokeDashoffset: [0, -24] }}
+          transition={{ duration: 1.4, repeat: Infinity, ease: "linear", delay: 0.3 }}
+        />
+        {/* Queue → Core */}
+        <motion.path
+          d="M130 360 C240 320, 320 300, 400 260"
+          fill="none" stroke="#F5A623" strokeWidth="1.5" strokeDasharray="5 7"
+          animate={{ strokeDashoffset: [0, -24] }}
+          transition={{ duration: 1.4, repeat: Infinity, ease: "linear", delay: 0.6 }}
+        />
+        {/* Postgres → Core */}
+        <motion.path
+          d="M590 355 C510 310, 460 290, 400 260"
+          fill="none" stroke="#28C840" strokeWidth="1.5" strokeDasharray="5 7"
+          animate={{ strokeDashoffset: [0, -24] }}
+          transition={{ duration: 1.4, repeat: Infinity, ease: "linear", delay: 0.9 }}
+        />
+        {/* Cross connections — subtle */}
+        <motion.path
+          d="M130 105 C260 80, 450 80, 590 85"
+          fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1"
+          strokeDasharray="4 10"
           animate={{ strokeDashoffset: [0, -28] }}
-          transition={{ duration: 1.6, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
         />
         <motion.path
-          d="M200 380 C330 300, 470 430, 610 320"
-          fill="none"
-          stroke="#8A2BE2"
-          strokeWidth="2"
-          strokeDasharray="6 8"
-          animate={{ strokeDashoffset: [0, -28] }}
-          transition={{ duration: 1.6, repeat: Infinity, ease: "linear", delay: 0.2 }}
+          d="M130 360 C260 390, 450 390, 590 355"
+          fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1"
+          strokeDasharray="4 10"
+          animate={{ strokeDashoffset: [0, 28] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
         />
       </svg>
 
+      {/* Node cards */}
       {nodes.map((node, index) => (
         <motion.div
           key={node.label}
-          className="absolute rounded-2xl border border-white/[0.08] bg-black/55 px-4 py-3 backdrop-blur-xl"
+          className="absolute rounded-2xl border border-white/[0.09] bg-black/60 px-3.5 py-2.5 backdrop-blur-xl"
           style={{ left: node.x, top: node.y }}
-          animate={{ y: [0, index % 2 === 0 ? -10 : 10, 0] }}
-          transition={{ duration: 4.8 + index * 0.4, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ y: [0, index % 2 === 0 ? -8 : 8, 0] }}
+          transition={{ duration: 4.5 + index * 0.5, repeat: Infinity, ease: "easeInOut" }}
         >
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
             <span
-              className="h-2.5 w-2.5 rounded-full"
-              style={{ backgroundColor: node.color, boxShadow: `0 0 12px ${node.color}` }}
+              className="h-2 w-2 rounded-full flex-shrink-0"
+              style={{ backgroundColor: node.color, boxShadow: `0 0 10px ${node.color}` }}
             />
-            <span className="text-xs font-medium tracking-wide text-white/80">
-              {node.label}
-            </span>
+            <span className="text-[11px] font-medium tracking-wide text-white/80">{node.label}</span>
+          </div>
+          <div
+            className="mt-1 text-[9px] font-mono pl-[18px]"
+            style={{ color: `${node.color}80` }}
+          >
+            {node.latency}
           </div>
         </motion.div>
       ))}
+
+      {/* Live traffic badge */}
+      <motion.div
+        className="absolute bottom-4 right-4 flex items-center gap-2 rounded-full border border-white/[0.08] bg-black/50 px-3 py-1.5 backdrop-blur-sm"
+        animate={{ opacity: [0.7, 1, 0.7] }}
+        transition={{ duration: 2.5, repeat: Infinity }}
+      >
+        <span className="h-1.5 w-1.5 rounded-full bg-[#28C840]" style={{ boxShadow: "0 0 8px #28C840" }} />
+        <span className="text-[10px] font-medium text-white/50 uppercase tracking-[0.15em]">Live traffic</span>
+      </motion.div>
     </div>
   );
 }
