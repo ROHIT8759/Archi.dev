@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { Play, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
+import LineWaves from "@/components/ui/LineWaves";
 const stats = [
   { value: 10, suffix: "x", label: "Faster" },
   { value: 0, suffix: "%", label: "Lock-in" },
