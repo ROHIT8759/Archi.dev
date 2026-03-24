@@ -1,9 +1,8 @@
-import { Ban, CalendarX2, CreditCard, Users } from "lucide-react";
 import PolicyPage from "@/components/legal/PolicyPage";
 
 const sections = [
   {
-    icon: CalendarX2,
+    iconName: "CalendarX2",
     title: "Subscription Cancellation",
     accent: "#00F0FF",
     content: [
@@ -22,7 +21,7 @@ const sections = [
     ],
   },
   {
-    icon: CreditCard,
+    iconName: "CreditCard",
     title: "Credits, Top-Ups & Plan Changes",
     accent: "#8A2BE2",
     content: [
@@ -41,7 +40,7 @@ const sections = [
     ],
   },
   {
-    icon: Users,
+    iconName: "Users",
     title: "Team & Workspace Implications",
     accent: "#28C840",
     content: [
@@ -60,7 +59,7 @@ const sections = [
     ],
   },
   {
-    icon: Ban,
+    iconName: "Ban",
     title: "Termination by Archi.dev",
     accent: "#F5A623",
     content: [

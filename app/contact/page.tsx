@@ -1,9 +1,8 @@
-import { Clock3, LifeBuoy, Mail, ShieldCheck } from "lucide-react";
 import PolicyPage from "@/components/legal/PolicyPage";
 
 const sections = [
   {
-    icon: Mail,
+    iconName: "Mail",
     title: "General Contact Channels",
     accent: "#00F0FF",
     content: [
@@ -22,7 +21,7 @@ const sections = [
     ],
   },
   {
-    icon: LifeBuoy,
+    iconName: "LifeBuoy",
     title: "What to Include in Your Request",
     accent: "#8A2BE2",
     content: [
@@ -41,7 +40,7 @@ const sections = [
     ],
   },
   {
-    icon: Clock3,
+    iconName: "Clock3",
     title: "Support Timelines",
     accent: "#28C840",
     content: [
@@ -60,7 +59,7 @@ const sections = [
     ],
   },
   {
-    icon: ShieldCheck,
+    iconName: "ShieldCheck",
     title: "Escalation & Notices",
     accent: "#F5A623",
     content: [

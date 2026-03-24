@@ -1,9 +1,8 @@
-import { Box, Cloud, FileStack, Globe2 } from "lucide-react";
 import PolicyPage from "@/components/legal/PolicyPage";
 
 const sections = [
   {
-    icon: Cloud,
+    iconName: "Cloud",
     title: "Digital Delivery Model",
     accent: "#00F0FF",
     content: [
@@ -22,7 +21,7 @@ const sections = [
     ],
   },
   {
-    icon: FileStack,
+    iconName: "FileStack",
     title: "Fulfillment Timelines",
     accent: "#8A2BE2",
     content: [
@@ -41,7 +40,7 @@ const sections = [
     ],
   },
   {
-    icon: Globe2,
+    iconName: "Globe2",
     title: "Geographic Availability",
     accent: "#28C840",
     content: [
@@ -60,7 +59,7 @@ const sections = [
     ],
   },
   {
-    icon: Box,
+    iconName: "Box",
     title: "Issues With Delivery",
     accent: "#F5A623",
     content: [

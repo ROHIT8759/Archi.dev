@@ -1,9 +1,42 @@
 "use client";
 import { motion } from "framer-motion";
 import { ReactLenis } from "lenis/react";
-import type { LucideIcon } from "lucide-react";
+import {
+  Ban,
+  Box,
+  CalendarX2,
+  Clock3,
+  Cloud,
+  CreditCard,
+  FileStack,
+  FileWarning,
+  Globe2,
+  LifeBuoy,
+  Mail,
+  RotateCcw,
+  ShieldCheck,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 import Navbar from "@/components/landing/Navbar";
 import CTAFooter from "@/components/landing/CTAFooter";
+
+const iconMap: Record<string, LucideIcon> = {
+  Ban,
+  Box,
+  CalendarX2,
+  Clock3,
+  Cloud,
+  CreditCard,
+  FileStack,
+  FileWarning,
+  Globe2,
+  LifeBuoy,
+  Mail,
+  RotateCcw,
+  ShieldCheck,
+  Users,
+};
 
 type PolicyItem = {
   subtitle: string;
@@ -11,7 +44,7 @@ type PolicyItem = {
 };
 
 type PolicySection = {
-  icon: LucideIcon;
+  iconName: string;
   title: string;
   accent: string;
   content: readonly PolicyItem[];
@@ -89,7 +122,7 @@ export default function PolicyPage({
         <section className="px-6 pb-28 md:px-16 xl:px-24">
           <div className="mx-auto max-w-4xl space-y-6">
             {sections.map((section, i) => {
-              const Icon = section.icon;
+              const Icon = iconMap[section.iconName];
               return (
                 <motion.div
                   key={section.title}
@@ -110,7 +143,7 @@ export default function PolicyPage({
                       className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
                       style={{ backgroundColor: `${section.accent}18` }}
                     >
-                      <Icon size={16} style={{ color: section.accent }} />
+                      {Icon ? <Icon size={16} style={{ color: section.accent }} /> : null}
                     </div>
                     <h2 className="text-lg font-semibold tracking-tight text-white">{section.title}</h2>
                   </div>

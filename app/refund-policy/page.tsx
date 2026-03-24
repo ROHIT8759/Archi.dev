@@ -1,9 +1,8 @@
-import { CreditCard, FileWarning, RotateCcw, ShieldCheck } from "lucide-react";
 import PolicyPage from "@/components/legal/PolicyPage";
 
 const sections = [
   {
-    icon: CreditCard,
+    iconName: "CreditCard",
     title: "Eligible Refund Scenarios",
     accent: "#00F0FF",
     content: [
@@ -22,7 +21,7 @@ const sections = [
     ],
   },
   {
-    icon: FileWarning,
+    iconName: "FileWarning",
     title: "Non-Refundable Items",
     accent: "#8A2BE2",
     content: [
@@ -41,7 +40,7 @@ const sections = [
     ],
   },
   {
-    icon: RotateCcw,
+    iconName: "RotateCcw",
     title: "Refund Request Process",
     accent: "#28C840",
     content: [
@@ -60,7 +59,7 @@ const sections = [
     ],
   },
   {
-    icon: ShieldCheck,
+    iconName: "ShieldCheck",
     title: "Chargebacks & Abuse Prevention",
     accent: "#F5A623",
     content: [
