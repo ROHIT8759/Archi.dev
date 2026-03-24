@@ -18,8 +18,8 @@ export const metadata: Metadata = {
   title: "Archi.dev - Visual Backend Architecture Studio",
   description: "Visually construct backend architectures, generate production-grade code instantly, and deploy with one click. AI-powered scaffolding for modern applications.",
   icons: {
-    icon: "/favicon.svg",
-    apple: "/favicon.svg",
+    icon: "/favicon.png",
+    apple: "/favicon.png",
   },
   openGraph: {
     title: "Archi.dev - Visual Backend Architecture Studio",

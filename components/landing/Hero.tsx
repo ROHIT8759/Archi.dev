@@ -1,13 +1,6 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useInView,
-  useMotionValue,
-  useSpring,
-} from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
 import { Play, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import LineWaves from "@/components/ui/LineWaves";
@@ -54,42 +47,7 @@ export default function Hero() {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
-  const primaryX = useMotionValue(0);
-  const primaryY = useMotionValue(0);
-  const secondaryX = useMotionValue(0);
-  const secondaryY = useMotionValue(0);
-  const primarySpringX = useSpring(primaryX, { stiffness: 220, damping: 20, mass: 0.3 });
-  const primarySpringY = useSpring(primaryY, { stiffness: 220, damping: 20, mass: 0.3 });
-  const secondarySpringX = useSpring(secondaryX, { stiffness: 220, damping: 20, mass: 0.3 });
-  const secondarySpringY = useSpring(secondaryY, { stiffness: 220, damping: 20, mass: 0.3 });
   const statsInView = useInView(statsRef, { once: true });
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
-  const scrollIndicatorOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.12],
-    [1, 0]
-  );
-  const headingContainer = {
-    hidden: {},
-    show: {
-      transition: {
-        staggerChildren: 0.09,
-      },
-    },
-  };
-  const headingLine = {
-    hidden: { y: 44, opacity: 0, filter: "blur(10px)" },
-    show: {
-      y: 0,
-      opacity: 1,
-      filter: "blur(0px)",
-      transition: { duration: 0.82, ease: heroEase },
-    },
-  };
 
   const applyTrail = (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -112,7 +70,7 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-[100vh] w-full flex flex-col justify-center bg-black overflow-hidden pb-28 md:pb-32"
+      className="relative min-h-[100vh] w-full flex flex-col justify-center bg-black overflow-hidden pb-40 md:pb-44"
     >
       <div className="absolute inset-0 pointer-events-none opacity-30">
         <LineWaves
@@ -161,8 +119,7 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-        style={{ y }}
-        className="relative z-10 px-6 md:px-16 xl:px-24 max-w-7xl mx-auto w-full pt-36 pb-52 md:pb-44"
+        className="relative z-10 px-6 md:px-16 xl:px-24 max-w-7xl mx-auto w-full pt-36 pb-64 md:pb-56"
       >
         <motion.div
           initial={{ y: 40, opacity: 0, filter: "blur(10px)" }}
@@ -186,17 +143,27 @@ export default function Hero() {
           </motion.span>
         </motion.div>
         <motion.h1
-          variants={headingContainer}
-          initial="hidden"
-          animate="show"
+          initial={{ y: 40, opacity: 0, filter: "blur(10px)" }}
+          animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="text-gradient font-medium tracking-tighter leading-[0.85] mb-10"
           style={{ fontSize: "clamp(4rem, 10vw, 11rem)" }}
         >
-          <motion.span className="block" variants={headingLine}>
+          <motion.span
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="block"
+          >
             The canvas
           </motion.span>
           <br />
-          <motion.span className="block" variants={headingLine}>
+          <motion.span
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="block"
+          >
             to ship.
           </motion.span>
         </motion.h1>
@@ -308,20 +275,6 @@ export default function Hero() {
             <span className="text-white/60 font-semibold">4.9</span>
             <span>/ 5 rating</span>
           </div>
-        </motion.div>
-      </motion.div>
-      <motion.div
-        style={{ opacity: scrollIndicatorOpacity }}
-        className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2"
-      >
-        <span className="text-[10px] text-white/30 uppercase tracking-[0.2em] font-medium">
-          Scroll
-        </span>
-        <motion.div
-          animate={{ y: [0, 5, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <ChevronDown size={16} className="text-white/25" />
         </motion.div>
       </motion.div>
       <div
