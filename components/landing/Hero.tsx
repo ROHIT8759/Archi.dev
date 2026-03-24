@@ -1,6 +1,6 @@
 "use client";
-import { useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useInView, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
 import { Play, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import LineWaves from "@/components/ui/LineWaves";
@@ -47,7 +47,20 @@ export default function Hero() {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
+  const primaryX = useMotionValue(0);
+  const primaryY = useMotionValue(0);
+  const secondaryX = useMotionValue(0);
+  const secondaryY = useMotionValue(0);
+  const primarySpringX = useSpring(primaryX, { stiffness: 220, damping: 20, mass: 0.3 });
+  const primarySpringY = useSpring(primaryY, { stiffness: 220, damping: 20, mass: 0.3 });
+  const secondarySpringX = useSpring(secondaryX, { stiffness: 220, damping: 20, mass: 0.3 });
+  const secondarySpringY = useSpring(secondaryY, { stiffness: 220, damping: 20, mass: 0.3 });
   const statsInView = useInView(statsRef, { once: true });
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
 
   const applyTrail = (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -68,9 +81,12 @@ export default function Hero() {
     setY(0);
   };
   return (
-    <section
+    <motion.section
       ref={containerRef}
-      className="relative min-h-[100vh] w-full flex flex-col justify-center bg-black overflow-hidden pb-40 md:pb-44"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      className="relative min-h-[100vh] w-full flex flex-col justify-center bg-black overflow-hidden pb-28 md:pb-32"
     >
       <div className="absolute inset-0 pointer-events-none opacity-30">
         <LineWaves
@@ -118,8 +134,9 @@ export default function Hero() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 px-6 md:px-16 xl:px-24 max-w-7xl mx-auto w-full pt-36 pb-64 md:pb-56"
+        transition={{ duration: 0.9, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+        style={{ y }}
+        className="relative z-10 px-6 md:px-16 xl:px-24 max-w-7xl mx-auto w-full pt-36 pb-44 md:pb-40"
       >
         <motion.div
           initial={{ y: 40, opacity: 0, filter: "blur(10px)" }}
@@ -147,7 +164,7 @@ export default function Hero() {
           animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="text-gradient font-medium tracking-tighter leading-[0.85] mb-10"
-          style={{ fontSize: "clamp(4rem, 10vw, 11rem)" }}
+          style={{ fontSize: "clamp(3.2rem, 9vw, 9rem)" }}
         >
           <motion.span
             initial={{ y: 20, opacity: 0 }}
@@ -281,7 +298,7 @@ export default function Hero() {
         ref={statsRef}
         className="absolute bottom-0 left-0 right-0 z-20 border-t border-white/[0.07]"
       >
-        <div className="max-w-7xl mx-auto grid grid-cols-4 divide-x divide-white/[0.07]">
+        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-white/[0.07]">
           {stats.map((stat, i) => (
             <motion.div
               key={stat.label}
@@ -323,6 +340,6 @@ export default function Hero() {
           ))}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

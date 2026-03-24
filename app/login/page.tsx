@@ -3,6 +3,7 @@ import { Suspense, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 function LoginContent() {
   const searchParams = useSearchParams();
@@ -15,27 +16,26 @@ function LoginContent() {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      // Build Auth0 authorization URL
-      const auth0Domain = process.env.NEXT_PUBLIC_AUTH0_DOMAIN;
-      const clientId = process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID;
-      const redirectUri = `${window.location.origin}/auth/callback`;
-      
-      if (!auth0Domain || !clientId) {
-        setLocalError("Auth0 environment variables are not configured.");
+      const supabase = getSupabaseBrowserClient();
+      if (!supabase) {
+        setLocalError("Supabase environment variables are not configured.");
         setLoading(false);
         return;
       }
 
-      const params = new URLSearchParams({
-        response_type: "code",
-        client_id: clientId,
-        redirect_uri: redirectUri,
-        scope: "openid profile email",
-        state: Math.random().toString(36).substring(7),
+      const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(
+        callbackUrl,
+      )}`;
+
+      const { error: authError } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo },
       });
 
-      const authUrl = `https://${auth0Domain}/authorize?${params.toString()}`;
-      window.location.href = authUrl;
+      if (authError) {
+        setLocalError(authError.message || "Authentication failed. Please try again.");
+        setLoading(false);
+      }
     } catch (error) {
       setLocalError("Authentication failed. Please try again.");
       setLoading(false);
@@ -130,7 +130,7 @@ function LoginContent() {
           <div className="space-y-2.5">
             {[
               { num: "01", text: "Continue from your last saved architecture and canvas layout.", accent: "#00F0FF" },
-              { num: "02", text: "Secure authentication managed via Auth0.", accent: "#8A2BE2" },
+                { num: "02", text: "Secure authentication managed via Supabase + Google.", accent: "#8A2BE2" },
               { num: "03", text: "Jump straight back into code generation and deployment.", accent: "#28C840" },
             ].map((item, i) => (
               <motion.div
@@ -187,7 +187,7 @@ function LoginContent() {
                   <path fill="#EB5424" d="M12 4v8l4 4"/>
                 </svg>
               )}
-              {loading ? "Signing in…" : "Continue with Auth0"}
+              {loading ? "Signing in…" : "Continue with Google"}
             </motion.button>
 
             <div className="flex items-center gap-3 my-5">
@@ -198,7 +198,7 @@ function LoginContent() {
 
             <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-3 text-center">
               <p className="text-white/30 text-xs leading-relaxed">
-                More auth methods coming soon — GitHub, email magic link.
+                Google sign-in only.
               </p>
             </div>
 

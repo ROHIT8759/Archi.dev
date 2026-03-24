@@ -482,8 +482,8 @@ export default function ScrollSequence() {
           ))}
         </div>
 
-        <div ref={containerRef} className="relative hidden h-[210vh] lg:block">
-          <div className="sticky top-24 flex h-[calc(100vh-7rem)] items-center gap-10 overflow-hidden">
+        <div ref={containerRef} className="relative hidden h-[190vh] lg:block">
+          <div className="sticky top-28 flex h-[calc(100vh-8rem)] items-center gap-10 overflow-hidden">
             <motion.div
               className="pointer-events-none absolute left-[22%] top-1/2 h-[36rem] w-[36rem] -translate-y-1/2 rounded-full blur-[140px]"
               style={{ backgroundColor: activeGlow, opacity: 0.15 }}
