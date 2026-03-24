@@ -68,7 +68,6 @@ export default function Hero() {
     offset: ["start start", "end start"],
   });
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
   const scrollIndicatorOpacity = useTransform(
     scrollYProgress,
     [0, 0.12],
@@ -159,7 +158,7 @@ export default function Hero() {
         }}
       />
       <motion.div
-        style={{ y, opacity }}
+        style={{ y }}
         className="relative z-10 px-6 md:px-16 xl:px-24 max-w-7xl mx-auto w-full pt-36 pb-52 md:pb-44"
       >
         <motion.div
