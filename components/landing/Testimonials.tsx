@@ -8,7 +8,8 @@ const testimonials = [
     author: "Marcus Chen",
     role: "Staff Engineer",
     company: "Vercel",
-    avatar: "MC",
+    avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=facearea&w=128&h=128&q=80",
+    avatarAlt: "Portrait of Marcus Chen",
     gradient: "from-cyan-400 to-blue-600",
     accent: "#00F0FF",
     stat: { value: "3.2×", label: "faster deploys" },
@@ -19,7 +20,8 @@ const testimonials = [
     author: "Priya Rajan",
     role: "Backend Lead",
     company: "Stripe",
-    avatar: "PR",
+    avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=facearea&w=128&h=128&q=80",
+    avatarAlt: "Portrait of Priya Rajan",
     gradient: "from-violet-400 to-purple-600",
     accent: "#8A2BE2",
     stat: { value: "98%", label: "type coverage" },
@@ -30,7 +32,8 @@ const testimonials = [
     author: "Leon Hartmann",
     role: "Platform Engineer",
     company: "Shopify",
-    avatar: "LH",
+    avatarUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=facearea&w=128&h=128&q=80",
+    avatarAlt: "Portrait of Leon Hartmann",
     gradient: "from-emerald-400 to-teal-600",
     accent: "#28C840",
     stat: { value: "99.98%", label: "uptime" },
@@ -41,7 +44,8 @@ const testimonials = [
     author: "Camille Torres",
     role: "Founding Engineer",
     company: "Linear",
-    avatar: "CT",
+    avatarUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=facearea&w=128&h=128&q=80",
+    avatarAlt: "Portrait of Camille Torres",
     gradient: "from-orange-400 to-red-500",
     accent: "#F5A623",
     stat: { value: "13", label: "regions live" },
@@ -52,7 +56,8 @@ const testimonials = [
     author: "Ryo Tanaka",
     role: "CTO",
     company: "Loom",
-    avatar: "RT",
+    avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=facearea&w=128&h=128&q=80",
+    avatarAlt: "Portrait of Ryo Tanaka",
     gradient: "from-pink-400 to-rose-600",
     accent: "#FF6BAE",
     stat: { value: "5×", label: "team velocity" },
@@ -63,7 +68,8 @@ const testimonials = [
     author: "Sofia Adekunle",
     role: "Engineering Manager",
     company: "Notion",
-    avatar: "SA",
+    avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=facearea&w=128&h=128&q=80",
+    avatarAlt: "Portrait of Sofia Adekunle",
     gradient: "from-sky-400 to-indigo-600",
     accent: "#00F0FF",
     stat: { value: "−80%", label: "review time" },
@@ -107,10 +113,11 @@ function TestimonialCard({ t }: { t: (typeof testimonials)[number] }) {
       <div className="flex items-center justify-between relative z-10">
         <div className="flex items-center gap-2.5">
           <div
-            className={`w-8 h-8 rounded-full bg-gradient-to-br ${t.gradient} flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0`}
-          >
-            {t.avatar}
-          </div>
+            role="img"
+            aria-label={t.avatarAlt}
+            className="w-8 h-8 rounded-full ring-1 ring-white/20 overflow-hidden flex-shrink-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${t.avatarUrl})` }}
+          />
           <div>
             <div className="text-white/80 text-xs font-semibold">{t.author}</div>
             <div className="text-white/30 text-[10px]">

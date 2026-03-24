@@ -139,6 +139,7 @@ export default function Pricing() {
     <section className="py-32 px-6 md:px-16 xl:px-24 bg-black relative">
       <div className="section-top-line" />
       
+      {/* Ambient glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full bg-[#00F0FF]/5 blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full bg-[#8A2BE2]/5 blur-3xl" />

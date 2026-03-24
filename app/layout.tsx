@@ -15,8 +15,33 @@ const poetic = Caveat({
   weight: ["700"],
 });
 export const metadata: Metadata = {
-  title: "Archi.dev",
-  description: "Archi.dev visual backend architecture and code generation studio",
+  title: "Archi.dev - Visual Backend Architecture Studio",
+  description: "Visually construct backend architectures, generate production-grade code instantly, and deploy with one click. AI-powered scaffolding for modern applications.",
+  icons: {
+    icon: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
+  openGraph: {
+    title: "Archi.dev - Visual Backend Architecture Studio",
+    description: "Visually construct backend architectures and deploy with AI-powered code generation",
+    url: "https://archi-dev.vercel.app",
+    siteName: "Archi.dev",
+    images: [
+      {
+        url: "/preview.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Archi.dev - Visual Backend Architecture Studio",
+    description: "Visually construct backend architectures and deploy with AI-powered code generation",
+    images: ["/preview.png"],
+  },
 };
 export default function RootLayout({
   children,

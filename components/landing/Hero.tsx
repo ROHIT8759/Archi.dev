@@ -158,6 +158,9 @@ export default function Hero() {
         }}
       />
       <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
         style={{ y }}
         className="relative z-10 px-6 md:px-16 xl:px-24 max-w-7xl mx-auto w-full pt-36 pb-52 md:pb-44"
       >
