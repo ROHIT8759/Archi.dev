@@ -14,7 +14,7 @@ type PolicySection = {
   icon: LucideIcon;
   title: string;
   accent: string;
-  content: PolicyItem[];
+  content: readonly PolicyItem[];
 };
 
 type PolicyPageProps = {
@@ -23,7 +23,7 @@ type PolicyPageProps = {
   title: string;
   description: string;
   lastUpdated: string;
-  sections: PolicySection[];
+  sections: readonly PolicySection[];
   closingText: React.ReactNode;
 };
 
