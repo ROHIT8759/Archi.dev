@@ -162,8 +162,8 @@ export default function Hero() {
           initial={{ y: 40, opacity: 0, filter: "blur(10px)" }}
           animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-white font-medium tracking-tighter leading-[0.85] mb-10"
-          style={{ fontSize: "clamp(3.2rem, 9vw, 9rem)" }}
+          className="max-w-5xl text-white font-medium tracking-tighter leading-[0.88] mb-8"
+          style={{ fontSize: "clamp(3rem, 8vw, 7.5rem)" }}
         >
           <motion.span
             initial={{ y: 20, opacity: 0 }}
@@ -171,27 +171,26 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.1 }}
             className="block"
           >
-            The canvas
+            Design the backend.
           </motion.span>
-          <br />
           <motion.span
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="block"
           >
-            to ship.
+            Ship with confidence.
           </motion.span>
         </motion.h1>
         <motion.p
           initial={{ y: 40, opacity: 0, filter: "blur(10px)" }}
           animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-          className="max-w-2xl text-xl text-white/55 mb-12 leading-relaxed"
+          className="max-w-3xl text-lg md:text-xl text-white/55 mb-12 leading-relaxed"
         >
-          Your AI-native toolkit to stop writing boilerplate.
-          <br />
-          Design visually. Deploy instantly.
+          Model APIs, workflows, data, and infrastructure in one visual studio.
+          Generate portable architecture artifacts and production-ready scaffolding
+          without losing the system design behind your code.
         </motion.p>
         <motion.div
           initial={{ y: 40, opacity: 0, filter: "blur(10px)" }}
