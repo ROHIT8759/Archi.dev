@@ -1,25 +1,26 @@
 "use client";
 import { motion } from "framer-motion";
-import { Github, Twitter, Linkedin, Mail, ArrowUp } from "lucide-react";
+import { Github, Twitter, Linkedin, Mail, ArrowUp, type LucideIcon } from "lucide-react";
 
 const footerLinks = {
   product: [
     { name: "Features", href: "#features" },
     { name: "Pricing", href: "/pricing" },
     { name: "API", href: "#api" },
-    { name: "Documentation", href: "#docs" },
+    { name: "Studio", href: "/studio" },
+    { name: "Documentation", href: "/docs" },
   ],
   company: [
-    { name: "About", href: "#about" },
-    { name: "Blog", href: "#blog" },
-    { name: "Careers", href: "#careers" },
-    { name: "Contact", href: "#contact" },
+    { name: "Blog", href: "/blog" },
+    { name: "Changelog", href: "/changelog" },
+    { name: "Status", href: "/status" },
+    { name: "Contact", href: "mailto:support@archi.dev" },
   ],
   legal: [
-    { name: "Privacy", href: "#privacy" },
-    { name: "Terms", href: "#terms" },
-    { name: "Security", href: "#security" },
-    { name: "Compliance", href: "#compliance" },
+    { name: "Privacy", href: "/privacy" },
+    { name: "Terms", href: "/terms" },
+    { name: "Security", href: "/status" },
+    { name: "Compliance", href: "/status" },
   ],
 };
 
@@ -43,7 +44,7 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
   );
 }
 
-function SocialIcon({ href, icon: Icon, name }: { href: string; icon: any; name: string }) {
+function SocialIcon({ href, icon: Icon, name }: { href: string; icon: LucideIcon; name: string }) {
   return (
     <motion.a
       href={href}
@@ -140,9 +141,9 @@ export default function Footer() {
             </div>
 
             <div className="flex items-center gap-6">
-              <FooterLink href="#privacy">Privacy</FooterLink>
-              <FooterLink href="#terms">Terms</FooterLink>
-              <FooterLink href="#security">Security</FooterLink>
+              <FooterLink href="/privacy">Privacy</FooterLink>
+              <FooterLink href="/terms">Terms</FooterLink>
+              <FooterLink href="/status">Security</FooterLink>
             </div>
           </motion.div>
         </div>
@@ -155,7 +156,7 @@ export default function Footer() {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        className="fixed bottom-8 right-8 w-12 h-12 rounded-full glass-panel border border-white/[0.06] flex items-center justify-center text-white/60 hover:text-white hover:border-white/[0.20] transition-all duration-300 z-50"
+        className="absolute bottom-8 right-8 w-12 h-12 rounded-full glass-panel border border-white/[0.06] flex items-center justify-center text-white/60 hover:text-white hover:border-white/[0.20] transition-all duration-300 z-30"
       >
         <ArrowUp className="w-5 h-5" />
       </motion.button>

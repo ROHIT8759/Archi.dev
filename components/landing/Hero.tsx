@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
-import { Play, ChevronDown } from "lucide-react";
+import { Play } from "lucide-react";
 import { useRouter } from "next/navigation";
 import LineWaves from "@/components/ui/LineWaves";
 const stats = [
@@ -10,7 +10,6 @@ const stats = [
   { value: 100, suffix: "%", label: "Portable" },
   { value: 60, suffix: "s", label: "Deploy" },
 ];
-const heroEase: [number, number, number, number] = [0.16, 1, 0.3, 1];
 function Counter({
   target,
   suffix,
@@ -163,7 +162,7 @@ export default function Hero() {
           initial={{ y: 40, opacity: 0, filter: "blur(10px)" }}
           animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-gradient font-medium tracking-tighter leading-[0.85] mb-10"
+          className="text-white font-medium tracking-tighter leading-[0.85] mb-10"
           style={{ fontSize: "clamp(3.2rem, 9vw, 9rem)" }}
         >
           <motion.span

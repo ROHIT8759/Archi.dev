@@ -36,7 +36,7 @@ function LoginContent() {
         setLocalError(authError.message || "Authentication failed. Please try again.");
         setLoading(false);
       }
-    } catch (error) {
+    } catch {
       setLocalError("Authentication failed. Please try again.");
       setLoading(false);
     }

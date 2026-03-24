@@ -1,6 +1,5 @@
 "use client";
-import { useRef } from "react";
-import { motion, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
+import { motion } from "framer-motion";
 
 const steps = [
   {
@@ -35,45 +34,6 @@ const steps = [
   },
 ];
 
-function useSegmentProgress(
-  progress: MotionValue<number>,
-  index: number,
-  total: number,
-) {
-  const start = index / total;
-  const end = (index + 1) / total;
-  return useTransform(progress, [start, end], [0, 1]);
-}
-
-function useSegmentOpacity(
-  progress: MotionValue<number>,
-  index: number,
-  total: number,
-) {
-  const start = Math.max(0, index / total - 0.08);
-  const peakStart = index / total + 0.06;
-  const peakEnd = (index + 1) / total - 0.08;
-  const end = Math.min(1, (index + 1) / total + 0.06);
-
-  return useTransform(
-    progress,
-    [start, peakStart, peakEnd, end],
-    [index === 0 ? 1 : 0, 1, 1, index === total - 1 ? 1 : 0],
-  );
-}
-
-function useSegmentY(
-  progress: MotionValue<number>,
-  index: number,
-  total: number,
-) {
-  const start = Math.max(0, index / total - 0.08);
-  const peakStart = index / total + 0.06;
-  const peakEnd = (index + 1) / total - 0.08;
-  const end = Math.min(1, (index + 1) / total + 0.06);
-
-  return useTransform(progress, [start, peakStart, peakEnd, end], [28, 0, 0, -28]);
-}
 
 function StepOneVisual() {
   const nodes = [
@@ -419,38 +379,6 @@ function MobileStepCard({
 }
 
 export default function ScrollSequence() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 110,
-    damping: 28,
-    restDelta: 0.001,
-  });
-
-  const stepOpacity0 = useSegmentOpacity(smoothProgress, 0, steps.length);
-  const stepOpacity1 = useSegmentOpacity(smoothProgress, 1, steps.length);
-  const stepOpacity2 = useSegmentOpacity(smoothProgress, 2, steps.length);
-  const stepOffset0 = useSegmentY(smoothProgress, 0, steps.length);
-  const stepOffset1 = useSegmentY(smoothProgress, 1, steps.length);
-  const stepOffset2 = useSegmentY(smoothProgress, 2, steps.length);
-  const progressBar0 = useSegmentProgress(smoothProgress, 0, steps.length);
-  const progressBar1 = useSegmentProgress(smoothProgress, 1, steps.length);
-  const progressBar2 = useSegmentProgress(smoothProgress, 2, steps.length);
-  const stepOpacities = [stepOpacity0, stepOpacity1, stepOpacity2];
-  const stepOffsets = [stepOffset0, stepOffset1, stepOffset2];
-  const progressBars = [progressBar0, progressBar1, progressBar2];
-  const activeGlow = useTransform(
-    smoothProgress,
-    [0, 0.33, 0.66, 1],
-    [steps[0].color, steps[0].color, steps[1].color, steps[2].color],
-  );
-  const panelTilt = useTransform(smoothProgress, [0, 0.5, 1], [-2, 0, 2]);
-  const panelLift = useTransform(smoothProgress, [0, 0.5, 1], [16, 0, -16]);
-  const Visuals = [StepOneVisual, StepTwoVisual, StepThreeVisual];
-
   return (
     <section id="solutions" className="relative bg-black px-6 py-20 md:px-16 md:py-24 xl:px-24">
       <div className="section-top-line" />
@@ -476,113 +404,10 @@ export default function ScrollSequence() {
           </p>
         </motion.div>
 
-        <div className="grid gap-6 lg:hidden">
+        <div className="grid gap-6">
           {steps.map((step, index) => (
             <MobileStepCard key={step.step} step={step} index={index} />
           ))}
-        </div>
-
-        <div ref={containerRef} className="relative hidden h-[190vh] lg:block">
-          <div className="sticky top-28 flex h-[calc(100vh-8rem)] items-center gap-10 overflow-hidden">
-            <motion.div
-              className="pointer-events-none absolute left-[22%] top-1/2 h-[36rem] w-[36rem] -translate-y-1/2 rounded-full blur-[140px]"
-              style={{ backgroundColor: activeGlow, opacity: 0.15 }}
-            />
-
-            <div className="relative z-10 flex w-[30rem] shrink-0 flex-col justify-center">
-              <div className="mb-8 flex gap-3">
-                {steps.map((step, index) => (
-                  <div key={step.step} className="h-1.5 w-16 overflow-hidden rounded-full bg-white/[0.06]">
-                    <motion.div
-                      className="h-full origin-left rounded-full"
-                      style={{
-                        scaleX: progressBars[index],
-                        transformOrigin: "left",
-                        backgroundColor: step.color,
-                        boxShadow: `0 0 18px ${step.color}`,
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
-
-              <div className="relative h-[25rem]">
-                {steps.map((step, index) => (
-                  <motion.div
-                    key={step.step}
-                    className="absolute inset-0 flex flex-col justify-center"
-                    style={{
-                      opacity: stepOpacities[index],
-                      y: stepOffsets[index],
-                    }}
-                  >
-                    <div className="mb-5 flex items-center gap-3">
-                      <span className="text-[12px] font-bold uppercase tracking-[0.28em]" style={{ color: step.color }}>
-                        Step {step.step}
-                      </span>
-                      <div className="h-px w-14" style={{ backgroundColor: `${step.color}80` }} />
-                    </div>
-                    <p className="text-[12px] uppercase tracking-[0.24em]" style={{ color: step.color }}>
-                      {step.eyebrow}
-                    </p>
-                    <h3 className="mt-4 text-[clamp(2.2rem,3.5vw,3.6rem)] font-semibold leading-[1.04] tracking-tighter text-white">
-                      {step.title}
-                    </h3>
-                    <p className="mt-5 max-w-xl text-base leading-relaxed text-white/48">
-                      {step.description}
-                    </p>
-                    <div className="mt-7 flex flex-wrap gap-2.5">
-                      {step.bullets.map((bullet) => (
-                        <span
-                          key={bullet}
-                          className="rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-[11px] uppercase tracking-[0.16em] text-white/55"
-                        >
-                          {bullet}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="mt-7 grid max-w-md grid-cols-3 gap-3">
-                      {step.metrics.map((metric) => (
-                        <div
-                          key={metric}
-                          className="rounded-2xl border border-white/[0.06] bg-black/20 px-4 py-3 text-sm font-semibold text-white/85"
-                          style={{ borderLeftColor: `${step.color}60`, borderLeftWidth: "2px" }}
-                        >
-                          {metric}
-                        </div>
-                      ))}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-
-            <motion.div
-              className="relative z-10 flex-1"
-              style={{ rotate: panelTilt, y: panelLift }}
-            >
-              <motion.div
-              className="relative aspect-[1.12/1] overflow-hidden rounded-[2rem] border border-white/[0.08] bg-white/[0.03] shadow-[0_28px_120px_rgba(0,0,0,0.38)]"
-                style={{
-                  boxShadow: useTransform(
-                    activeGlow,
-                    (color) => `0 28px 120px rgba(0,0,0,0.38), inset 0 0 0 1px ${color}20`,
-                  ),
-                }}
-              >
-                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_38%)]" />
-                {Visuals.map((Visual, index) => (
-                  <motion.div
-                    key={steps[index].step}
-                    className="absolute inset-0"
-                    style={{ opacity: stepOpacities[index] }}
-                  >
-                    <Visual />
-                  </motion.div>
-                ))}
-              </motion.div>
-            </motion.div>
-          </div>
         </div>
       </div>
     </section>
