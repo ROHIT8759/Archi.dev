@@ -64,9 +64,9 @@ const docCategories = [
   {
     icon: Shield,
     eyebrow: "Security",
-    title: "Auth & Security",
-    description: "Built-in Supabase auth integration, HTTP-only cookies, and RBAC for team plans.",
-    links: ["Auth setup", "Session management", "RBAC guide", "SSO / SAML"],
+    title: "Auth, Legal & Trust",
+    description: "Built-in Supabase auth integration, public legal pages, visible contact routes, and the core trust signals expected on a production website.",
+    links: ["Auth setup", "Privacy policy", "Terms of service", "Public website checklist"],
     accent: "#8A2BE2",
   },
   {
@@ -104,8 +104,8 @@ const quickLinks = [
   { label: "Cancellation policy", href: "/cancellation-policy" },
   { label: "Shipping policy", href: "/shipping-policy" },
   { label: "Contact support", href: "/contact" },
-  { label: "API rate limits", href: "/docs" },
-  { label: "Razorpay setup", href: "/docs" },
+  { label: "Privacy policy", href: "/privacy" },
+  { label: "Terms of service", href: "/terms" },
 ];
 
 const changelogItems = [
