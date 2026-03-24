@@ -322,6 +322,6 @@ export const HEADER_MENU_TEXT = {
   commitChanges: "Commit Changes",
   logout: "Log out",
   buyPro: "Buy Pro",
-  signInWithGoogle: "Sign in with Google",
-  loginHint: "Continue with Google to access your workspace.",
+  signInWithGoogle: "Choose sign-in method",
+  loginHint: "Continue with Google or GitHub to access your workspace.",
 } as const;

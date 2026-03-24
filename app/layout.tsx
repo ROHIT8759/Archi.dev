@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
-import { Caveat, Geist, Geist_Mono } from "next/font/google";
+import { Barlow, Geist_Mono, Instrument_Serif } from "next/font/google";
 import "./globals.css";
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const bodyFont = Barlow({
+  variable: "--font-body",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
 });
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-const poetic = Caveat({
-  variable: "--font-poetic",
+const headingFont = Instrument_Serif({
+  variable: "--font-heading",
   subsets: ["latin"],
-  weight: ["700"],
+  weight: ["400"],
+  style: ["italic"],
 });
 export const metadata: Metadata = {
   title: "Archi.dev - Visual Backend Architecture Studio",
@@ -51,7 +53,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${poetic.variable}`}
+      className={`${bodyFont.variable} ${geistMono.variable} ${headingFont.variable}`}
     >
       <body className="antialiased min-h-screen">
         {children}

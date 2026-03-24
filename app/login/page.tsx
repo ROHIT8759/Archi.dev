@@ -5,21 +5,24 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
+type AuthProvider = "google" | "github";
+
 function LoginContent() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? "/studio";
   const error = searchParams.get("error") ?? undefined;
   const router = useRouter();
   const [localError, setLocalError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loadingProvider, setLoadingProvider] = useState<AuthProvider | null>(null);
 
-  const handleLogin = async () => {
-    setLoading(true);
+  const handleLogin = async (provider: AuthProvider) => {
+    setLocalError(null);
+    setLoadingProvider(provider);
     try {
       const supabase = getSupabaseBrowserClient();
       if (!supabase) {
         setLocalError("Supabase environment variables are not configured.");
-        setLoading(false);
+        setLoadingProvider(null);
         return;
       }
 
@@ -28,17 +31,17 @@ function LoginContent() {
       )}`;
 
       const { error: authError } = await supabase.auth.signInWithOAuth({
-        provider: "google",
+        provider,
         options: { redirectTo },
       });
 
       if (authError) {
         setLocalError(authError.message || "Authentication failed. Please try again.");
-        setLoading(false);
+        setLoadingProvider(null);
       }
     } catch {
       setLocalError("Authentication failed. Please try again.");
-      setLoading(false);
+      setLoadingProvider(null);
     }
   };
 
@@ -130,7 +133,7 @@ function LoginContent() {
           <div className="space-y-2.5">
             {[
               { num: "01", text: "Continue from your last saved architecture and canvas layout.", accent: "#00F0FF" },
-                { num: "02", text: "Secure authentication managed via Supabase + Google.", accent: "#8A2BE2" },
+              { num: "02", text: "Secure authentication managed via Supabase OAuth with Google and GitHub.", accent: "#8A2BE2" },
               { num: "03", text: "Jump straight back into code generation and deployment.", accent: "#28C840" },
             ].map((item, i) => (
               <motion.div
@@ -170,35 +173,58 @@ function LoginContent() {
               We&apos;ll return you to your studio after authentication.
             </p>
 
-            <motion.button
-              type="button"
-              onClick={handleLogin}
-              disabled={loading}
-              className="shimmer-btn w-full rounded-2xl bg-white text-black py-3.5 text-sm font-semibold cursor-pointer flex items-center justify-center gap-3 disabled:opacity-55 transition-opacity"
-              whileHover={{ scale: 1.02, boxShadow: "0 0 30px rgba(255,255,255,0.22)" }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ duration: 0.2 }}
-            >
-              {loading ? (
-                <span className="w-4 h-4 rounded-full border-2 border-black/25 border-t-black animate-spin" />
-              ) : (
-                <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-                  <path fill="#EB5424" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
-                  <path fill="#EB5424" d="M12 4v8l4 4"/>
-                </svg>
-              )}
-              {loading ? "Signing in…" : "Continue with Google"}
-            </motion.button>
+            <div className="space-y-3">
+              <motion.button
+                type="button"
+                onClick={() => void handleLogin("google")}
+                disabled={loadingProvider !== null}
+                className="shimmer-btn w-full rounded-2xl bg-white text-black py-3.5 text-sm font-semibold cursor-pointer flex items-center justify-center gap-3 disabled:opacity-55 transition-opacity"
+                whileHover={{ scale: 1.02, boxShadow: "0 0 30px rgba(255,255,255,0.22)" }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ duration: 0.2 }}
+              >
+                {loadingProvider === "google" ? (
+                  <span className="w-4 h-4 rounded-full border-2 border-black/25 border-t-black animate-spin" />
+                ) : (
+                  <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="#EA4335" d="M12 10.2v3.9h5.5c-.24 1.25-.95 2.3-2 3.01l3.24 2.51C20.64 17.88 22 15.28 22 12c0-.78-.07-1.53-.21-2.25H12z"/>
+                    <path fill="#34A853" d="M12 22c2.97 0 5.46-.98 7.28-2.66l-3.24-2.51c-.9.6-2.05.96-4.04.96-3.1 0-5.73-2.09-6.67-4.9H2.0v3.08A10 10 0 0 0 12 22z"/>
+                    <path fill="#4A90E2" d="M5.33 12.89A6.01 6.01 0 0 1 5 11c0-.66.11-1.3.33-1.89V6.03H2A10 10 0 0 0 2 16l3.33-3.11z"/>
+                    <path fill="#FBBC05" d="M12 4.2c1.61 0 3.05.55 4.19 1.62l3.14-3.14C17.45.89 14.96 0 12 0A10 10 0 0 0 2 6.03l3.33 3.08C6.27 6.29 8.9 4.2 12 4.2z"/>
+                  </svg>
+                )}
+                {loadingProvider === "google" ? "Signing in…" : "Continue with Google"}
+              </motion.button>
+
+              <motion.button
+                type="button"
+                onClick={() => void handleLogin("github")}
+                disabled={loadingProvider !== null}
+                className="w-full rounded-2xl border border-white/[0.08] bg-white/[0.03] text-white py-3.5 text-sm font-semibold cursor-pointer flex items-center justify-center gap-3 disabled:opacity-55 transition-colors hover:border-white/[0.14] hover:bg-white/[0.05]"
+                whileHover={{ scale: 1.02, boxShadow: "0 0 24px rgba(255,255,255,0.06)" }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ duration: 0.2 }}
+              >
+                {loadingProvider === "github" ? (
+                  <span className="w-4 h-4 rounded-full border-2 border-white/25 border-t-white animate-spin" />
+                ) : (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path fill="currentColor" d="M12 2C6.48 2 2 6.58 2 12.26c0 4.54 2.87 8.39 6.84 9.75.5.1.68-.22.68-.49 0-.24-.01-1.04-.01-1.89-2.78.62-3.37-1.21-3.37-1.21-.46-1.19-1.11-1.51-1.11-1.51-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.36 1.12 2.94.86.09-.67.35-1.12.64-1.38-2.22-.26-4.55-1.14-4.55-5.08 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.74 0 0 .84-.27 2.75 1.05A9.35 9.35 0 0 1 12 6.92c.85 0 1.71.12 2.51.36 1.91-1.32 2.75-1.05 2.75-1.05.55 1.43.2 2.48.1 2.74.64.72 1.03 1.63 1.03 2.75 0 3.95-2.34 4.81-4.57 5.07.36.32.68.95.68 1.92 0 1.39-.01 2.51-.01 2.85 0 .27.18.6.69.49A10.29 10.29 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z"/>
+                  </svg>
+                )}
+                {loadingProvider === "github" ? "Signing in…" : "Continue with GitHub"}
+              </motion.button>
+            </div>
 
             <div className="flex items-center gap-3 my-5">
               <div className="flex-1 h-px bg-white/[0.06]" />
-              <span className="text-white/20 text-xs">or</span>
+              <span className="text-white/20 text-xs">OAuth</span>
               <div className="flex-1 h-px bg-white/[0.06]" />
             </div>
 
             <div className="rounded-2xl border border-white/[0.06] bg-white/[0.02] px-4 py-3 text-center">
               <p className="text-white/30 text-xs leading-relaxed">
-                Google sign-in only.
+                Choose Google or GitHub to authenticate with your Supabase-backed workspace.
               </p>
             </div>
 

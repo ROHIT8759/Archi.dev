@@ -391,20 +391,7 @@ export default function Home() {
     }
   };
   const handleLogin = async () => {
-    const supabaseClient = getSupabaseBrowserClient();
-    if (!supabaseClient) {
-      return;
-    }
-    const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(
-      "/studio",
-    )}`;
-    const { error } = await supabaseClient.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo },
-    });
-    if (error) {
-      console.error("Login failed:", error.message);
-    }
+    router.push("/login?callbackUrl=%2Fstudio");
   };
   const handleLogout = async () => {
     const supabaseClient = getSupabaseBrowserClient();

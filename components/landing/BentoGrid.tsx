@@ -270,21 +270,31 @@ function SpotlightCard({
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       viewport={{ once: true, margin: "-60px" }}
+      whileHover={{ y: -2 }}
     >
+      {/* Spotlight radial */}
       <motion.div
         className="pointer-events-none absolute inset-0"
         animate={{ opacity: hovered ? 1 : 0 }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.25 }}
         style={{
-          background: `radial-gradient(400px circle at ${mouse.x}px ${mouse.y}px, ${accentColor}, transparent 65%)`,
+          background: `radial-gradient(480px circle at ${mouse.x}px ${mouse.y}px, ${accentColor}, transparent 65%)`,
         }}
       />
+      {/* Hover border glow */}
       <motion.div
         className="pointer-events-none absolute inset-0 rounded-3xl"
         animate={{ opacity: hovered ? 1 : 0 }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.25 }}
         style={{
-          boxShadow: `inset 0 0 0 1px ${accentColor.replace("0.07", "0.25")}`,
+          boxShadow: `inset 0 0 0 1px ${accentColor.replace(/[\d.]+\)$/, "0.35)")}`,
+        }}
+      />
+      {/* Top highlight line */}
+      <div
+        className="absolute top-0 left-6 right-6 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        style={{
+          background: `linear-gradient(90deg, transparent, ${accentColor.replace(/[\d.]+\)$/, "0.6)")}, transparent)`,
         }}
       />
       {children}
@@ -295,7 +305,17 @@ export default function BentoGrid() {
   return (
     <section id="product" className="py-32 px-6 md:px-16 xl:px-24 bg-black relative z-20">
       <div className="section-top-line" />
-      <div className="max-w-7xl mx-auto">
+
+      {/* Ambient section glow */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 40% at 50% 0%, rgba(0,240,255,0.035) 0%, transparent 60%)",
+        }}
+      />
+
+      <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
           initial={{ y: 40, opacity: 0, filter: "blur(10px)" }}
           whileInView={{ y: 0, opacity: 1, filter: "blur(0px)" }}
@@ -310,12 +330,19 @@ export default function BentoGrid() {
             </p>
           </div>
           <h2
-            className="text-gradient font-medium tracking-tighter leading-[0.87] mb-5"
+            className="text-gradient-vivid font-medium tracking-tighter leading-[0.87] mb-5"
             style={{ fontSize: "clamp(2.5rem, 5vw, 5rem)" }}
           >
             Visually construct
             <br />
-            the impossible.
+            <span style={{
+              background: "linear-gradient(135deg, #00F0FF 0%, #79b7ff 60%, #a78bfa 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}>
+              the impossible.
+            </span>
           </h2>
           <p className="text-white/35 text-lg max-w-xl leading-relaxed">
             Every feature you need to design, generate, and ship backend systems — in one canvas.
@@ -326,8 +353,9 @@ export default function BentoGrid() {
             colSpan="md:col-span-2"
             accentColor="rgba(0,240,255,0.07)"
           >
-            <div className="text-[10px] font-bold text-[#00F0FF] uppercase tracking-[0.22em] mb-2">
-              Deploy
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-1 h-3.5 rounded-full bg-[#00F0FF] opacity-80" />
+              <span className="text-[10px] font-bold text-[#00F0FF] uppercase tracking-[0.22em]">Deploy</span>
             </div>
             <h3 className="text-xl font-semibold text-white tracking-tight">
               True One-Click Deployments.
@@ -348,8 +376,9 @@ export default function BentoGrid() {
               className="absolute inset-0 w-full h-full object-cover opacity-[0.18] mix-blend-luminosity pointer-events-none"
             />
             <div className="relative z-10">
-              <div className="text-[10px] font-bold text-[#8A2BE2] uppercase tracking-[0.22em] mb-2">
-                AI
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-1 h-3.5 rounded-full bg-[#8A2BE2] opacity-80" />
+                <span className="text-[10px] font-bold text-[#8A2BE2] uppercase tracking-[0.22em]">AI</span>
               </div>
               <h3 className="text-xl font-semibold text-white tracking-tight">
                 AI Agent Workflows.
@@ -389,8 +418,9 @@ export default function BentoGrid() {
             </div>
           </SpotlightCard>
           <SpotlightCard accentColor="rgba(255,255,255,0.04)">
-            <div className="text-[10px] font-bold text-white/30 uppercase tracking-[0.22em] mb-2">
-              Export
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-1 h-3.5 rounded-full bg-white/25" />
+              <span className="text-[10px] font-bold text-white/30 uppercase tracking-[0.22em]">Export</span>
             </div>
             <h3 className="text-xl font-semibold text-white tracking-tight">
               No Lock-in.
@@ -410,8 +440,9 @@ export default function BentoGrid() {
             colSpan="md:col-span-2"
             accentColor="rgba(0,240,255,0.06)"
           >
-            <div className="text-[10px] font-bold text-[#00F0FF] uppercase tracking-[0.22em] mb-2">
-              API
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-1 h-3.5 rounded-full bg-[#00F0FF] opacity-80" />
+              <span className="text-[10px] font-bold text-[#00F0FF] uppercase tracking-[0.22em]">API</span>
             </div>
             <h3 className="text-xl font-semibold text-white tracking-tight">
               Auto-Generated OpenAPI.
@@ -430,8 +461,9 @@ export default function BentoGrid() {
           >
             <div className="grid items-center gap-8 lg:grid-cols-[0.9fr_1.15fr_0.8fr]">
               <div className="max-w-sm">
-                <div className="text-[10px] font-bold text-[#00F0FF] uppercase tracking-[0.22em] mb-2">
-                  Global
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-1 h-3.5 rounded-full bg-[#00F0FF] opacity-80" />
+                  <span className="text-[10px] font-bold text-[#00F0FF] uppercase tracking-[0.22em]">Global</span>
                 </div>
                 <h3 className="text-xl font-semibold text-white tracking-tight">
                   Deploy Anywhere, Instantly.

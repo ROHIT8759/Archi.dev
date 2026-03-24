@@ -99,38 +99,79 @@ function StarRow({ color }: { color: string }) {
 
 function TestimonialCard({ t }: { t: (typeof testimonials)[number] }) {
   return (
-    <div className="relative flex-shrink-0 w-[320px] md:w-[350px] mx-3 rounded-2xl border border-white/[0.07] bg-white/[0.025] p-5 select-none">
+    <div
+      className="testimonial-card-premium relative flex-shrink-0 w-[320px] md:w-[350px] mx-3 rounded-2xl p-5 select-none group"
+      style={{
+        border: "1px solid rgba(255,255,255,0.07)",
+        background: "rgba(255,255,255,0.025)",
+        "--card-accent-gradient": `linear-gradient(90deg, transparent, ${t.accent}55, transparent)`,
+      } as React.CSSProperties}
+    >
+      {/* Ambient radial glow */}
       <div
         className="pointer-events-none absolute inset-0 rounded-2xl"
         style={{
-          background: `radial-gradient(220px circle at 30% 0%, ${t.accent}0a, transparent 60%)`,
+          background: `radial-gradient(260px circle at 25% 0%, ${t.accent}0d, transparent 65%)`,
         }}
       />
-      <StarRow color={t.accent} />
-      <p className="text-white/55 text-sm leading-relaxed mb-5 line-clamp-3 italic relative z-10">
-        &ldquo;{t.quote}&rdquo;
-      </p>
-      <div className="flex items-center justify-between relative z-10">
-        <div className="flex items-center gap-2.5">
-          <div
-            role="img"
-            aria-label={t.avatarAlt}
-            className="w-8 h-8 rounded-full ring-1 ring-white/20 overflow-hidden flex-shrink-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${t.avatarUrl})` }}
-          />
-          <div>
-            <div className="text-white/80 text-xs font-semibold">{t.author}</div>
-            <div className="text-white/30 text-[10px]">
-              {t.role} · {t.company}
+
+      {/* Hover glow border */}
+      <div
+        className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        style={{
+          boxShadow: `inset 0 0 0 1px ${t.accent}20`,
+        }}
+      />
+
+      <div className="relative z-10">
+        <StarRow color={t.accent} />
+
+        <p className="text-white/52 text-sm leading-relaxed mb-5 line-clamp-3 italic">
+          &ldquo;{t.quote}&rdquo;
+        </p>
+
+        {/* Separator */}
+        <div
+          className="mb-4 h-px w-full"
+          style={{
+            background: `linear-gradient(90deg, ${t.accent}20, transparent)`,
+          }}
+        />
+
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div
+              role="img"
+              aria-label={t.avatarAlt}
+              className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0 bg-cover bg-center"
+              style={{
+                backgroundImage: `url(${t.avatarUrl})`,
+                boxShadow: `0 0 0 2px ${t.accent}30`,
+              }}
+            />
+            <div>
+              <div className="text-white/82 text-xs font-semibold">{t.author}</div>
+              <div className="text-white/30 text-[10px] mt-0.5">
+                {t.role}
+                <span className="mx-1 opacity-50">·</span>
+                {t.company}
+              </div>
             </div>
           </div>
-        </div>
-        <div className="text-right flex-shrink-0 ml-3 pl-3 border-l border-white/[0.07]">
-          <div className="text-sm font-bold leading-none" style={{ color: t.accent }}>
-            {t.stat.value}
-          </div>
-          <div className="text-white/25 text-[9px] uppercase tracking-[0.15em] mt-0.5">
-            {t.stat.label}
+
+          <div
+            className="text-right flex-shrink-0 ml-3 pl-3"
+            style={{ borderLeft: "1px solid rgba(255,255,255,0.07)" }}
+          >
+            <div
+              className="text-sm font-bold leading-none tabular-nums"
+              style={{ color: t.accent }}
+            >
+              {t.stat.value}
+            </div>
+            <div className="text-white/25 text-[9px] uppercase tracking-[0.16em] mt-0.5">
+              {t.stat.label}
+            </div>
           </div>
         </div>
       </div>
@@ -225,23 +266,33 @@ export default function Testimonials() {
         transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
         className="max-w-7xl mx-auto px-6 md:px-16 xl:px-24 mt-14"
       >
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-px bg-white/[0.06] rounded-2xl overflow-hidden border border-white/[0.06]">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-px rounded-2xl overflow-hidden border border-white/[0.07]"
+          style={{ background: "rgba(255,255,255,0.04)" }}
+        >
           {statsRow.map((s, i) => (
             <div
               key={s.label}
-              className="bg-black px-6 py-5 text-center flex flex-col items-center justify-center gap-1.5"
+              className="bg-black px-6 py-6 text-center flex flex-col items-center justify-center gap-2 group relative overflow-hidden"
             >
+              {/* Hover top line */}
+              <div
+                className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-400"
+                style={{
+                  background: `linear-gradient(90deg, transparent, ${s.accent}55, transparent)`,
+                }}
+              />
+
               <motion.span
                 initial={{ opacity: 0, scale: 0.8 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.2 + i * 0.08, ease: [0.16, 1, 0.3, 1] }}
-                className="text-2xl font-bold tracking-tight"
+                className="text-2xl font-bold tracking-tight tabular-nums"
                 style={{ color: s.accent }}
               >
                 {s.value}
               </motion.span>
-              <span className="text-white/30 text-[10px] uppercase tracking-[0.18em]">
+              <span className="text-white/30 text-[10px] uppercase tracking-[0.2em]">
                 {s.label}
               </span>
             </div>
