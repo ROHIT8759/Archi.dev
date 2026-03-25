@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { CommandPalette } from "./CommandPalette";
+import { CopilotChatPill } from "./CopilotChatPill";
 import { StudioFooter } from "@/components/studio/StudioFooter";
 type StudioLayoutProps = {
   isCompactViewport: boolean;
@@ -33,6 +34,7 @@ export function StudioLayout({
     >
       {children}
       <CommandPalette />
+      <CopilotChatPill />
       <StudioFooter
         isCompactViewport={isCompactViewport}
         statusText={statusText}
