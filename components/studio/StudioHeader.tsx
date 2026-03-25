@@ -29,12 +29,6 @@ type HeaderTabsProps = {
   isCompactViewport: boolean;
   setActiveTab: (tab: WorkspaceTab) => void;
 };
-const workspaceCaption: Record<WorkspaceTab, string> = {
-  api: "Interface contracts, routes, and event surfaces",
-  database: "Schemas, pipelines, and operational data flows",
-  functions: "Business logic, jobs, and automation blocks",
-  agent: "AI-assisted architecture help and next-step guidance",
-};
 const baseActionStyle: React.CSSProperties = {
   borderRadius: 12,
   padding: "8px 12px",
@@ -126,37 +120,15 @@ function HeaderTabs({
         <div style={{ minWidth: 0 }}>
           <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              flexWrap: "wrap",
-              marginBottom: 4,
+              fontFamily: "var(--font-poetic)",
+              fontWeight: 700,
+              fontSize: isCompactViewport ? 22 : 24,
+              letterSpacing: "0.02em",
+              lineHeight: 1,
+              color: "color-mix(in srgb, var(--foreground) 96%, #ffffff 4%)",
             }}
           >
-            <div
-              style={{
-                fontFamily: "var(--font-poetic)",
-                fontWeight: 700,
-                fontSize: isCompactViewport ? 24 : 28,
-                letterSpacing: "0.02em",
-                lineHeight: 1,
-                color: "color-mix(in srgb, var(--foreground) 96%, #ffffff 4%)",
-              }}
-            >
-              Archi.dev
-            </div>
-            {!isCompactViewport && <span className="studio-badge">Studio workspace</span>}
-          </div>
-          <div
-            style={{
-              fontSize: isCompactViewport ? 11 : 12,
-              color: "var(--muted)",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {workspaceCaption[activeTab]}
+            Archi.dev
           </div>
         </div>
       </Link>
@@ -216,53 +188,34 @@ function TemplatePicker({
   onSelectTemplate,
 }: TemplatePickerProps) {
   return (
-    <label
+    <select
+      defaultValue=""
+      onChange={(event) => {
+        const next = event.target.value as WorkspaceTemplateId | "";
+        if (!next) return;
+        onSelectTemplate(next);
+        event.target.value = "";
+      }}
       className="studio-card"
       style={{
-        display: "grid",
-        gap: 4,
-        borderRadius: 14,
-        padding: isCompactViewport ? "8px 10px" : "9px 12px",
-        minWidth: isCompactViewport ? 0 : 220,
+        border: "1px solid color-mix(in srgb, var(--border) 80%, transparent)",
+        background: "color-mix(in srgb, var(--floating) 90%, #09111a 10%)",
+        color: "var(--muted)",
+        borderRadius: 12,
+        padding: "9px 12px",
+        fontSize: 12,
+        minWidth: isCompactViewport ? 160 : 180,
+        cursor: "pointer",
+        outline: "none",
       }}
     >
-      <span
-        style={{
-          fontSize: 10,
-          textTransform: "uppercase",
-          letterSpacing: "0.1em",
-          color: "var(--muted)",
-        }}
-      >
-        Starter template
-      </span>
-      <select
-        defaultValue=""
-        onChange={(event) => {
-          const next = event.target.value as WorkspaceTemplateId | "";
-          if (!next) return;
-          onSelectTemplate(next);
-          event.target.value = "";
-        }}
-        style={{
-          border: "1px solid color-mix(in srgb, var(--border) 88%, transparent)",
-          background: "color-mix(in srgb, var(--floating) 90%, #09111a 10%)",
-          color: "var(--foreground)",
-          borderRadius: 10,
-          padding: "8px 10px",
-          fontSize: 12,
-          minWidth: isCompactViewport ? 180 : 196,
-          cursor: "pointer",
-        }}
-      >
-        <option value="">Load starter…</option>
-        {WORKSPACE_TEMPLATES.map((template) => (
-          <option key={template.id} value={template.id}>
-            {template.label}
-          </option>
-        ))}
-      </select>
-    </label>
+      <option value="">Load template…</option>
+      {WORKSPACE_TEMPLATES.map((template) => (
+        <option key={template.id} value={template.id}>
+          {template.label}
+        </option>
+      ))}
+    </select>
   );
 }
 type HeaderActionButtonsProps = {

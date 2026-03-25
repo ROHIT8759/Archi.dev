@@ -535,37 +535,26 @@ export function WorkspaceCanvas({
               borderRight: "1px solid color-mix(in srgb, var(--border) 84%, transparent)",
               background:
                 "linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0)), color-mix(in srgb, var(--panel) 95%, #08111d 5%)",
-              paddingTop: isNarrowViewport ? 48 : 12,
-              paddingRight: 10,
-              paddingBottom: 16,
-              paddingLeft: 12,
+              paddingTop: isNarrowViewport ? 48 : 10,
+              paddingRight: 8,
+              paddingBottom: 12,
+              paddingLeft: 10,
               display: "flex",
               flexDirection: "column",
-              gap: 12,
+              gap: 8,
               scrollbarGutter: "stable",
             }}
           >
-            <div className="studio-card-raised" style={{ borderRadius: 18, padding: 14, display: "grid", gap: 10 }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
-                <span className="studio-badge">{workspaceCopy.eyebrow}</span>
-                <span className="studio-badge">{nodes.length} blocks</span>
-              </div>
-              <div>
-                <div style={{ fontSize: 17, lineHeight: 1.2, fontWeight: 700, marginBottom: 6 }}>
-                  {workspaceCopy.title}
-                </div>
-                <div style={{ fontSize: 12, lineHeight: 1.55, color: "var(--muted)" }}>
-                  {workspaceCopy.description}
-                </div>
-              </div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                <span className="status-pill">
-                  <span className="status-dot success" />
-                  {visibleItemCount} blocks available
-                </span>
+            <div className="studio-card" style={{ borderRadius: 14, padding: "10px 12px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "var(--foreground)", letterSpacing: "0.02em" }}>{workspaceCopy.eyebrow}</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <span className="status-pill">
                   <span className={`status-dot ${isCanvasEmpty ? "warning" : "success"}`} />
-                  {isCanvasEmpty ? "Start by placing a block" : `${edges.length} links mapped`}
+                  {nodes.length} blocks
+                </span>
+                <span className="status-pill">
+                  <span className="status-dot success" />
+                  {visibleItemCount} available
                 </span>
               </div>
             </div>
@@ -579,20 +568,15 @@ export function WorkspaceCanvas({
               }}
             >
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-                <div>
-                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--muted)" }}>
-                    Canvas Copilot
-                  </div>
-                  <div style={{ fontSize: 12, color: "var(--secondary)", marginTop: 3 }}>
-                    Describe a change and apply it directly to the canvas.
-                  </div>
-                </div>
+                <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--muted)" }}>
+                  Canvas Copilot
+                </span>
                 <span style={{ fontSize: 10, color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.08em" }}>{activeTab}</span>
               </div>
               <textarea
                 value={copilotPrompt}
                 onChange={(event) => setCopilotPrompt(event.target.value)}
-                rows={4}
+                rows={3}
                 placeholder={workspaceCopy.placeholder}
                 style={{
                   width: "100%",
