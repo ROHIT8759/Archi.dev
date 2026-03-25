@@ -1,20 +1,15 @@
 import type { Metadata } from "next";
-import { Barlow, Geist_Mono, Instrument_Serif } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-const bodyFont = Barlow({
-  variable: "--font-body",
+
+const geist = Geist({
+  variable: "--font-geist",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
 });
+
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
-});
-const headingFont = Instrument_Serif({
-  variable: "--font-heading",
-  subsets: ["latin"],
-  weight: ["400"],
-  style: ["italic"],
 });
 export const metadata: Metadata = {
   title: "Archi.dev - Visual Backend Architecture Studio",
