@@ -1,0 +1,1 @@
+const fs = require('fs'); let c = fs.readFileSync('components/landing/ScrollSequence.tsx', 'utf8'); let s = c.lastIndexOf('import { useRef, useState'); let e = c.lastIndexOf('export default function ScrollSequence() {'); c = c.substring(0, s) + c.substring(e); fs.writeFileSync('components/landing/ScrollSequence.tsx', c);
