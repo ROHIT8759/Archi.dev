@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   HEADER_MENU_TEXT,
   tabLabel,
@@ -91,12 +92,15 @@ function HeaderTabs({
         flex: 1,
       }}
     >
-      <div
+      <Link
+        href="/"
         style={{
           display: "flex",
           alignItems: "center",
           gap: 12,
           minWidth: 0,
+          textDecoration: "none",
+          color: "inherit",
         }}
       >
         <div
@@ -155,7 +159,7 @@ function HeaderTabs({
             {workspaceCaption[activeTab]}
           </div>
         </div>
-      </div>
+      </Link>
       <div
         className="studio-card"
         style={{
@@ -660,19 +664,14 @@ export function StudioHeader({
           }}
         >
           {!isCompactViewport && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-                gap: 8,
-                flexWrap: "wrap",
-                maxWidth: 640,
-              }}
-            >
-              <HeaderActionButtons actions={headerActions} variant="desktop" />
-            </div>
+            <HeaderActionButtons
+              actions={headerActions.filter((a) => a.id === "gen")}
+              variant="desktop"
+            />
           )}
+          <Link href="/dashboard" className="studio-nav-link">
+            Dashboard
+          </Link>
           {user ? (
             <ProfileButton
               avatarUrl={avatarUrl}
@@ -718,19 +717,11 @@ export function StudioHeader({
         </div>
       </div>
       {isCompactViewport && (
-        <div
-          style={{
-            display: "grid",
-            gap: 8,
-            marginTop: 12,
-          }}
-        >
-          <div className="studio-card" style={{ borderRadius: 14, padding: 8, display: "grid", gap: 8 }}>
-            <HeaderActionButtons
-              actions={headerActions.filter((action) => action.id !== "save" && action.id !== "reset")}
-              variant="menu"
-            />
-          </div>
+        <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+          <HeaderActionButtons
+            actions={headerActions.filter((a) => a.id === "gen" || a.id === "test")}
+            variant="menu"
+          />
         </div>
       )}
     </header>

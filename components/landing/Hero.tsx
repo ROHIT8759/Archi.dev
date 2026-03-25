@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { motion, useInView, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useInView, useMotionValue, useScroll, useSpring, useTransform, type MotionValue } from "framer-motion";
 import { Play } from "lucide-react";
 import { useRouter } from "next/navigation";
 import LineWaves from "@/components/ui/LineWaves";
@@ -45,177 +45,6 @@ function Counter({
   );
 }
 
-/* ─── Live Architecture Preview ─── */
-function ArchPreview() {
-  const nodes = [
-    { id: "api",   label: "API Gateway",   sub: ":3000",       x: "44%", y: "14%", color: "#00F0FF", delay: 0.2 },
-    { id: "auth",  label: "Auth Service",  sub: "JWT · bcrypt", x: "66%", y: "43%", color: "#8A2BE2", delay: 0.35 },
-    { id: "db",    label: "PostgreSQL",    sub: "v16 · Prisma", x: "10%", y: "55%", color: "#3ad69f", delay: 0.5 },
-    { id: "cache", label: "Redis Cache",   sub: "TTL: 3600s",   x: "56%", y: "76%", color: "#ffbf5b", delay: 0.65 },
-  ];
-
-  return (
-    <div className="card-premium relative rounded-2xl overflow-hidden scan-sweep">
-      {/* Window chrome */}
-      <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/[0.06] bg-[#070d17]">
-        <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
-        <span className="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]" />
-        <span className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
-        <span className="ml-2 flex-1 text-[10px] text-white/25 font-mono select-none">
-          archi.dev — canvas
-        </span>
-        <div className="flex items-center gap-1.5">
-          <motion.span
-            className="w-1.5 h-1.5 rounded-full bg-[#00F0FF]"
-            animate={{ opacity: [1, 0.4, 1] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <span className="text-[10px] text-[#00F0FF]/65 font-mono">4 services · live</span>
-        </div>
-      </div>
-
-      {/* Canvas */}
-      <div className="relative h-[296px] bg-[#050a12]">
-        {/* Dot grid */}
-        <div className="absolute inset-0 bg-dots opacity-25" />
-        {/* Ambient glow */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(circle at 50% 30%, rgba(0,240,255,0.07), transparent 60%)",
-          }}
-        />
-
-        {/* SVG connection lines */}
-        <svg
-          className="absolute inset-0 w-full h-full"
-          viewBox="0 0 360 296"
-          preserveAspectRatio="none"
-        >
-          {/* API → Auth */}
-          <motion.line
-            x1="158" y1="60" x2="250" y2="136"
-            stroke="rgba(0,240,255,0.28)" strokeWidth="1.5"
-            strokeDasharray="5 5"
-            animate={{ strokeDashoffset: [20, 0] }}
-            transition={{ duration: 1.0, repeat: Infinity, ease: "linear" }}
-          />
-          <motion.circle
-            r="3" fill="#00F0FF"
-            animate={{ cx: [158, 250], cy: [60, 136], opacity: [0.9, 0] }}
-            transition={{ duration: 1.2, repeat: Infinity, ease: "easeIn", delay: 0.1 }}
-          />
-
-          {/* API → DB */}
-          <motion.line
-            x1="158" y1="60" x2="90" y2="168"
-            stroke="rgba(58,214,159,0.28)" strokeWidth="1.5"
-            strokeDasharray="5 5"
-            animate={{ strokeDashoffset: [20, 0] }}
-            transition={{ duration: 1.3, repeat: Infinity, ease: "linear", delay: 0.4 }}
-          />
-          <motion.circle
-            r="3" fill="#3ad69f"
-            animate={{ cx: [158, 90], cy: [60, 168], opacity: [0.9, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeIn", delay: 0.5 }}
-          />
-
-          {/* Auth → Cache */}
-          <motion.line
-            x1="250" y1="158" x2="222" y2="232"
-            stroke="rgba(138,43,226,0.28)" strokeWidth="1.5"
-            strokeDasharray="5 5"
-            animate={{ strokeDashoffset: [20, 0] }}
-            transition={{ duration: 1.1, repeat: Infinity, ease: "linear", delay: 0.7 }}
-          />
-
-          {/* DB → Cache */}
-          <motion.line
-            x1="90" y1="196" x2="210" y2="238"
-            stroke="rgba(255,191,91,0.18)" strokeWidth="1"
-            strokeDasharray="3 7"
-            animate={{ strokeDashoffset: [20, 0] }}
-            transition={{ duration: 1.9, repeat: Infinity, ease: "linear", delay: 1.1 }}
-          />
-        </svg>
-
-        {/* Architecture node chips */}
-        {nodes.map((node) => (
-          <motion.div
-            key={node.id}
-            className="absolute"
-            style={{ left: node.x, top: node.y }}
-            initial={{ opacity: 0, scale: 0.75 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: node.delay, duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div
-              className="arch-node-chip"
-              style={{
-                borderColor: `${node.color}28`,
-                background: `linear-gradient(135deg, ${node.color}0a, rgba(12,18,28,0.95))`,
-              }}
-            >
-              <span
-                className="w-2 h-2 rounded-[3px] shrink-0"
-                style={{ background: node.color, boxShadow: `0 0 6px ${node.color}88` }}
-              />
-              <span style={{ color: `${node.color}dd` }}>{node.label}</span>
-            </div>
-            <div
-              className="text-[8px] mt-0.5 font-mono text-center"
-              style={{ color: "rgba(255,255,255,0.22)" }}
-            >
-              {node.sub}
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Deploy status footer */}
-      <div className="border-t border-white/[0.05] px-4 py-2.5 bg-[#050a12] flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <motion.span
-            className="w-1.5 h-1.5 rounded-full bg-[#28C840] shrink-0"
-            animate={{ opacity: [1, 0.3, 1] }}
-            transition={{ duration: 1.8, repeat: Infinity }}
-          />
-          <span className="text-[10px] font-mono text-white/32">
-            <span className="text-[#28C840]/80">✓</span>{" "}
-            Deployed to{" "}
-            <span className="text-white/55">iad1</span>
-            <span className="text-white/18 mx-1.5">·</span>
-            <span className="text-[#00F0FF]/60">58s</span>
-          </span>
-        </div>
-        <span className="text-[9px] font-mono text-white/18 tracking-wide">
-          sha-a1b2c3d
-        </span>
-      </div>
-
-      {/* Floating "generated" badge */}
-      <motion.div
-        className="absolute top-[52px] right-3"
-        initial={{ opacity: 0, y: -6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.0, duration: 0.5 }}
-      >
-        <div
-          className="text-[9px] font-mono font-bold px-2.5 py-1 rounded-full"
-          style={{
-            border: "1px solid rgba(58,214,159,0.25)",
-            background: "rgba(58,214,159,0.08)",
-            color: "rgba(58,214,159,0.8)",
-          }}
-        >
-          AI-generated
-        </div>
-      </motion.div>
-    </div>
-  );
-}
-
 export default function Hero() {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -237,21 +66,21 @@ export default function Hero() {
 
   const applyTrail = (
     event: React.MouseEvent<HTMLButtonElement>,
-    setX: (x: number) => void,
-    setY: (y: number) => void,
+    motionX: MotionValue<number>,
+    motionY: MotionValue<number>,
   ) => {
     const rect = event.currentTarget.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
     event.currentTarget.style.setProperty("--mx", `${x}px`);
     event.currentTarget.style.setProperty("--my", `${y}px`);
-    setX((x - rect.width / 2) * 0.12);
-    setY((y - rect.height / 2) * 0.12);
+    motionX.set((x - rect.width / 2) * 0.12);
+    motionY.set((y - rect.height / 2) * 0.12);
   };
 
-  const resetMagnetic = (setX: (x: number) => void, setY: (y: number) => void) => {
-    setX(0);
-    setY(0);
+  const resetMagnetic = (motionX: MotionValue<number>, motionY: MotionValue<number>) => {
+    motionX.set(0);
+    motionY.set(0);
   };
 
   return (
@@ -310,30 +139,10 @@ export default function Hero() {
         style={{ y }}
         className="relative z-10 px-6 md:px-16 xl:px-24 max-w-7xl mx-auto w-full pt-34 pb-44 md:pb-40"
       >
-        <div className="grid lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_440px] gap-12 xl:gap-16 items-center">
+        <div className="max-w-3xl">
 
           {/* ── Left column: content ── */}
           <div>
-            {/* Eyebrow badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="mb-7"
-            >
-              <span className="eyebrow-badge">
-                <span
-                  className="flex items-center justify-center w-5 h-5 rounded-full text-[9px] font-bold"
-                  style={{ background: "rgba(0,240,255,0.12)", color: "#00F0FF" }}
-                >
-                  ✦
-                </span>
-                <span>Visual Backend Architecture Studio</span>
-                <span style={{ color: "rgba(0,240,255,0.3)" }}>·</span>
-                <span style={{ color: "rgba(0,240,255,0.55)" }}>v2.0</span>
-              </span>
-            </motion.div>
-
             {/* Headline */}
             <motion.h1
               initial={{ y: 40, opacity: 0, filter: "blur(10px)" }}
@@ -394,8 +203,8 @@ export default function Hero() {
                 onClick={() => router.push("/login")}
                 className="shimmer-btn magnetic-btn hover-trail bg-white text-black px-8 py-4 rounded-full text-base font-semibold cursor-pointer"
                 style={{ x: primarySpringX, y: primarySpringY }}
-                onMouseMove={(event) => applyTrail(event, primaryX.set, primaryY.set)}
-                onMouseLeave={() => resetMagnetic(primaryX.set, primaryY.set)}
+                onMouseMove={(event) => applyTrail(event, primaryX, primaryY)}
+                onMouseLeave={() => resetMagnetic(primaryX, primaryY)}
                 whileHover={{
                   scale: 1.05,
                   boxShadow: "0 0 36px rgba(255,255,255,0.38)",
@@ -409,8 +218,8 @@ export default function Hero() {
                 onClick={() => router.push("/login")}
                 className="glass-panel magnetic-btn hover-trail flex items-center gap-3 px-8 py-4 rounded-full text-white/80 hover:text-white text-base font-medium cursor-pointer border border-white/[0.1] hover:border-white/[0.18] transition-colors"
                 style={{ x: secondarySpringX, y: secondarySpringY }}
-                onMouseMove={(event) => applyTrail(event, secondaryX.set, secondaryY.set)}
-                onMouseLeave={() => resetMagnetic(secondaryX.set, secondaryY.set)}
+                onMouseMove={(event) => applyTrail(event, secondaryX, secondaryY)}
+                onMouseLeave={() => resetMagnetic(secondaryX, secondaryY)}
                 whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(255,255,255,0.05)" }}
                 transition={{ duration: 0.2 }}
               >
@@ -484,27 +293,6 @@ export default function Hero() {
               </div>
             </motion.div>
           </div>
-
-          {/* ── Right column: live arch preview ── */}
-          <motion.div
-            className="hidden lg:block"
-            initial={{ opacity: 0, x: 40, filter: "blur(20px)" }}
-            animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-            transition={{ duration: 1.0, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <ArchPreview />
-
-            {/* Caption */}
-            <motion.p
-              className="mt-3 text-center text-[11px] text-white/22 font-mono tracking-wide"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.4, duration: 0.5 }}
-            >
-              Live canvas · no YAML required
-            </motion.p>
-          </motion.div>
-
         </div>
       </motion.div>
 

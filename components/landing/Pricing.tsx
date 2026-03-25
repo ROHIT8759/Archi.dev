@@ -1,9 +1,51 @@
 "use client";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Check, Sparkles, Shield, Crown } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+declare global {
+  interface Window {
+    Razorpay?: new (options: Record<string, unknown>) => {
+      open: () => void;
+    };
+  }
+}
+
+const checkoutScriptSrc = "https://checkout.razorpay.com/v1/checkout.js";
+
+let checkoutScriptPromise: Promise<boolean> | null = null;
+
+const loadCheckoutScript = () => {
+  if (typeof window === "undefined") {
+    return Promise.resolve(false);
+  }
+  if (window.Razorpay) {
+    return Promise.resolve(true);
+  }
+  if (checkoutScriptPromise) {
+    return checkoutScriptPromise;
+  }
+  checkoutScriptPromise = new Promise<boolean>((resolve) => {
+    const existingScript = document.querySelector<HTMLScriptElement>(`script[src="${checkoutScriptSrc}"]`);
+    if (existingScript) {
+      existingScript.addEventListener("load", () => resolve(true), { once: true });
+      existingScript.addEventListener("error", () => resolve(false), { once: true });
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = checkoutScriptSrc;
+    script.async = true;
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+  return checkoutScriptPromise;
+};
 
 const plans = [
   {
+    id: "starter",
     name: "Starter",
     price: "$0",
     description: "Perfect for individuals and small projects",
@@ -19,6 +61,7 @@ const plans = [
     color: "#ffffff",
   },
   {
+    id: "pro",
     name: "Pro",
     price: "$49",
     period: "/month",
@@ -37,8 +80,10 @@ const plans = [
     highlighted: true,
     color: "#00F0FF",
     badge: "Most Popular",
+    checkoutPlan: "pro",
   },
   {
+    id: "enterprise",
     name: "Enterprise",
     price: "Custom",
     description: "For large organizations with custom needs",
@@ -60,6 +105,63 @@ const plans = [
 
 function PricingCard({ plan, index }: { plan: typeof plans[0]; index: number }) {
   const Icon = plan.icon;
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleCheckout = async () => {
+    if (plan.id === "starter") {
+      router.push("/login?callbackUrl=%2Fstudio");
+      return;
+    }
+    if (plan.id === "enterprise") {
+      router.push("/contact");
+      return;
+    }
+    if (!plan.checkoutPlan) {
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const scriptLoaded = await loadCheckoutScript();
+      if (!scriptLoaded || !window.Razorpay) {
+        throw new Error("checkout_unavailable");
+      }
+      const response = await fetch("/api/payments/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ plan: plan.checkoutPlan }),
+      });
+      if (response.status === 401) {
+        router.push("/login?callbackUrl=%2Fpricing");
+        return;
+      }
+      if (!response.ok) {
+        throw new Error("checkout_order_failed");
+      }
+      const checkout = await response.json();
+      const razorpay = new window.Razorpay({
+        key: checkout.key,
+        amount: checkout.amount,
+        currency: checkout.currency,
+        name: checkout.name,
+        description: checkout.description,
+        order_id: checkout.orderId,
+        prefill: checkout.prefill,
+        notes: checkout.notes,
+        theme: {
+          color: "#00F0FF",
+        },
+        callback_url: checkout.callbackUrl,
+      });
+      razorpay.open();
+    } catch (error) {
+      console.error("Pricing checkout failed", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   if (plan.highlighted) {
     return (
@@ -182,12 +284,14 @@ function PricingCard({ plan, index }: { plan: typeof plans[0]; index: number }) 
           <motion.button
             whileHover={{ scale: 1.02, boxShadow: "0 0 28px rgba(0,240,255,0.35)" }}
             whileTap={{ scale: 0.98 }}
+            onClick={() => void handleCheckout()}
+            disabled={isLoading}
             className="relative z-10 w-full py-3.5 rounded-xl font-bold text-black text-sm shimmer-btn"
             style={{
               background: "linear-gradient(135deg, #00F0FF 0%, #4ba8ff 100%)",
             }}
           >
-            Start Free Trial
+            {isLoading ? "Opening checkout…" : "Start Free Trial"}
           </motion.button>
         </div>
       </motion.div>
@@ -256,9 +360,15 @@ function PricingCard({ plan, index }: { plan: typeof plans[0]; index: number }) 
       <motion.button
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
+        onClick={() => void handleCheckout()}
+        disabled={isLoading}
         className="w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 bg-white/[0.07] text-white hover:bg-white/[0.12] border border-white/[0.1] hover:border-white/[0.2]"
       >
-        {plan.price === "$0" ? "Get Started Free" : "Contact Sales"}
+        {isLoading
+          ? "Opening checkout…"
+          : plan.price === "$0"
+            ? "Get Started Free"
+            : "Contact Sales"}
       </motion.button>
     </motion.div>
   );

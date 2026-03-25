@@ -19,6 +19,7 @@ const headingFont = Instrument_Serif({
 export const metadata: Metadata = {
   title: "Archi.dev - Visual Backend Architecture Studio",
   description: "Visually construct backend architectures, generate production-grade code instantly, and deploy with one click. AI-powered scaffolding for modern applications.",
+  metadataBase: new URL("https://archi-dev.vercel.app"),
   icons: {
     icon: "/favicon.png",
     apple: "/favicon.png",
@@ -53,9 +54,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${bodyFont.variable} ${geistMono.variable} ${headingFont.variable}`}
     >
-      <body className="antialiased min-h-screen">
+      <body suppressHydrationWarning className="antialiased min-h-screen">
         {children}
       </body>
     </html>

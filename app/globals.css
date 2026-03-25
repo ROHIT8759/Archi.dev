@@ -1183,3 +1183,47 @@ aside {
     0 0 80px rgba(138, 43, 226, 0.06),
     0 32px 64px rgba(0, 0, 0, 0.5);
 }
+
+/* Studio header nav link — subtle hover without inline handlers */
+.studio-nav-link {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.1;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  background: transparent;
+  color: var(--muted);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.studio-nav-link:hover {
+  color: var(--foreground);
+  border-color: color-mix(in srgb, var(--border) 100%, transparent);
+  background: color-mix(in srgb, var(--floating) 60%, transparent);
+}
+
+/* Navbar account avatar button */
+.navbar-account-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.07);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.navbar-account-avatar:hover {
+  border-color: rgba(0, 240, 255, 0.4);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.15);
+}
