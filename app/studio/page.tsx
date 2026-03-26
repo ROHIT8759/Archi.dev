@@ -16,7 +16,10 @@ import {
 import { type WorkspaceTemplateId } from "@/lib/studio/graph-templates";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { useStore } from "@/store/useStore";
-export default function Home() {
+type StudioPageProps = {
+  initialTab?: WorkspaceTab;
+};
+export function StudioPage({ initialTab = "api" }: StudioPageProps) {
   const router = useRouter();
   const setActiveWorkspaceTab = useStore((state) => state.setActiveTab);
   const apiTableModalNodeId = useStore((state) => state.apiTableModalNodeId);
@@ -29,7 +32,7 @@ export default function Home() {
   const setFocusNodeId = useStore((state) => state.setFocusNodeId);
   const setValidationIssues = useStore((state) => state.setValidationIssues);
   const graphs = useStore((state) => state.graphs);
-  const [activeTab, setActiveTab] = useState<WorkspaceTab>("api");
+  const [activeTab, setActiveTab] = useState<WorkspaceTab>(initialTab);
   const [resetLayoutSignal, setResetLayoutSignal] = useState(0);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -105,23 +108,8 @@ export default function Home() {
     fetchCredits();
   }, [user]);
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedTab = localStorage.getItem(STORAGE_KEYS.activeTab);
-      if (
-        savedTab === "api" ||
-        savedTab === "database" ||
-        savedTab === "functions" ||
-        savedTab === "agent"
-      ) {
-        const frame = window.requestAnimationFrame(() => {
-          setActiveTab(savedTab);
-        });
-        return () => {
-          window.cancelAnimationFrame(frame);
-        };
-      }
-    }
-  }, []);
+    setActiveTab(initialTab);
+  }, [initialTab]);
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (
@@ -581,7 +569,6 @@ export default function Home() {
       )}
       <StudioHeader
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
         isCompactViewport={isCompactViewport}
         profileRef={profileRef}
         user={user}
@@ -677,4 +664,7 @@ export default function Home() {
       )}
     </StudioLayout>
   );
+}
+export default function Home() {
+  return <StudioPage initialTab="api" />;
 }

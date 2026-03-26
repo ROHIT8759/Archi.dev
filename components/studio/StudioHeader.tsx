@@ -27,7 +27,6 @@ type HeaderAction = {
 type HeaderTabsProps = {
   activeTab: WorkspaceTab;
   isCompactViewport: boolean;
-  setActiveTab: (tab: WorkspaceTab) => void;
 };
 const baseActionStyle: React.CSSProperties = {
   borderRadius: 12,
@@ -76,7 +75,6 @@ function getActionStyle(
 function HeaderTabs({
   activeTab,
   isCompactViewport,
-  setActiveTab,
 }: HeaderTabsProps) {
   return (
     <div
@@ -150,14 +148,17 @@ function HeaderTabs({
         }}
       >
         {(Object.keys(tabLabel) as WorkspaceTab[]).map((tab) => (
-          <button
+          <Link
             key={tab}
-            type="button"
-            onClick={() => setActiveTab(tab)}
+            href={`/studio/${tab}`}
             onMouseMove={handleInteractiveMove}
             onMouseLeave={handleInteractiveLeave}
             className="magnetic-btn hover-trail"
             style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              textDecoration: "none",
               border: "1px solid transparent",
               borderRadius: 12,
               padding: isCompactViewport ? "8px 10px" : "9px 12px",
@@ -178,7 +179,7 @@ function HeaderTabs({
             }}
           >
             {tabLabel[tab]}
-          </button>
+          </Link>
         ))}
       </div>
     </div>
@@ -508,7 +509,6 @@ function LoginMenu({ handleLogin }: LoginMenuProps) {
 }
 type StudioHeaderProps = {
   activeTab: WorkspaceTab;
-  setActiveTab: (tab: WorkspaceTab) => void;
   isCompactViewport: boolean;
   profileRef: React.RefObject<HTMLDivElement | null>;
   user: StudioUser | null;
@@ -537,7 +537,6 @@ type StudioHeaderProps = {
 };
 export function StudioHeader({
   activeTab,
-  setActiveTab,
   isCompactViewport,
   profileRef,
   user,
@@ -658,7 +657,6 @@ export function StudioHeader({
         <HeaderTabs
           activeTab={activeTab}
           isCompactViewport={isCompactViewport}
-          setActiveTab={setActiveTab}
         />
         <TemplatePicker
           isCompactViewport={isCompactViewport}
