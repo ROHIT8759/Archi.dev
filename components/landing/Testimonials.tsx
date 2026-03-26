@@ -216,7 +216,7 @@ function MarqueeRow({
 
 export default function Testimonials() {
   return (
-    <section className="bg-black py-24 relative overflow-hidden">
+    <section className="bg-black py-16 md:py-24 relative overflow-hidden">
       <div className="section-top-line" />
 
       {/* Ambient radial glow */}

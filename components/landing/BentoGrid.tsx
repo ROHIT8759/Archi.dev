@@ -262,7 +262,7 @@ function SpotlightCard({
   return (
     <motion.div
       ref={cardRef}
-      className={`glass-panel rounded-3xl p-8 group relative overflow-hidden cursor-default ${colSpan} ${className}`}
+      className={`glass-panel rounded-3xl p-5 md:p-8 group relative overflow-hidden cursor-default ${colSpan} ${className}`}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -303,7 +303,7 @@ function SpotlightCard({
 }
 export default function BentoGrid() {
   return (
-    <section id="product" className="py-32 px-6 md:px-16 xl:px-24 relative z-20">
+    <section id="product" className="py-20 md:py-32 px-6 md:px-16 xl:px-24 relative z-20">
       <div className="section-top-line" />
 
       {/* Ambient section glow */}
@@ -321,7 +321,7 @@ export default function BentoGrid() {
           whileInView={{ y: 0, opacity: 1, filter: "blur(0px)" }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
-          className="mb-16"
+          className="mb-10 md:mb-16"
         >
           <div className="flex items-center gap-3 mb-5">
             <span className="section-line-accent" />
@@ -331,7 +331,7 @@ export default function BentoGrid() {
           </div>
           <h2
             className="text-gradient-vivid font-medium tracking-tighter leading-[0.87] mb-5"
-            style={{ fontSize: "clamp(2.5rem, 5vw, 5rem)" }}
+            style={{ fontSize: "clamp(2rem, 7vw, 5rem)" }}
           >
             Visually construct
             <br />
@@ -459,8 +459,8 @@ export default function BentoGrid() {
             accentColor="rgba(0,240,255,0.05)"
             className="overflow-hidden"
           >
-            <div className="grid items-center gap-8 lg:grid-cols-[0.9fr_1.15fr_0.8fr]">
-              <div className="max-w-sm">
+            <div className="grid items-center gap-6 lg:gap-8 lg:grid-cols-[0.9fr_1.15fr_0.8fr]">
+              <div>
                 <div className="flex items-center gap-2 mb-3">
                   <span className="w-1 h-3.5 rounded-full bg-[#00F0FF] opacity-80" />
                   <span className="text-[10px] font-bold text-[#00F0FF] uppercase tracking-[0.22em]">Global</span>
@@ -471,7 +471,7 @@ export default function BentoGrid() {
                 <p className="text-sm text-white/40 mt-2 leading-relaxed">
                   Infrastructure available across every major region. Ship to the edge closest to your users — no extra config required.
                 </p>
-                <div className="mt-6 flex flex-col gap-2.5">
+                <div className="mt-4 grid grid-cols-2 gap-2 lg:flex lg:flex-col lg:gap-2.5">
                   {["13 global regions", "Sub-50ms cold starts", "Automatic failover", "Zero-downtime deploys"].map((feat) => (
                     <div key={feat} className="flex items-center gap-2.5 text-xs text-white/50">
                       <div className="w-1.5 h-1.5 rounded-full bg-[#00F0FF] shrink-0" />
@@ -496,7 +496,7 @@ export default function BentoGrid() {
                       ambientIntensity: 0.85,
                       pointLightIntensity: 1.8,
                     }}
-                    className="h-[380px]"
+                    className="h-[220px] md:h-[300px] lg:h-[380px]"
                   />
                 </div>
               </div>

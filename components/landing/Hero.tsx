@@ -89,7 +89,7 @@ export default function Hero() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="relative min-h-[100vh] w-full flex flex-col justify-center overflow-hidden pb-28 md:pb-32"
+      className="relative min-h-[100svh] w-full flex flex-col justify-center overflow-hidden pb-36 md:pb-32"
     >
       {/* Background effects */}
       <div className="absolute inset-0 pointer-events-none opacity-30">
@@ -113,7 +113,7 @@ export default function Hero() {
 
       {/* Ambient glow orbs */}
       <motion.div
-        className="absolute top-[15%] right-[12%] w-[500px] h-[500px] rounded-full pointer-events-none"
+        className="absolute top-[15%] right-[12%] w-[60vw] h-[60vw] max-w-[500px] max-h-[500px] rounded-full pointer-events-none"
         style={{
           background: "radial-gradient(circle, rgba(0,240,255,0.11) 0%, transparent 68%)",
           filter: "blur(48px)",
@@ -122,7 +122,7 @@ export default function Hero() {
         transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute bottom-[20%] left-[8%] w-[380px] h-[380px] rounded-full pointer-events-none"
+        className="absolute bottom-[20%] left-[8%] w-[45vw] h-[45vw] max-w-[380px] max-h-[380px] rounded-full pointer-events-none"
         style={{
           background: "radial-gradient(circle, rgba(138,43,226,0.11) 0%, transparent 68%)",
           filter: "blur(48px)",
@@ -137,7 +137,7 @@ export default function Hero() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.9, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
         style={{ y }}
-        className="relative z-10 px-6 md:px-16 xl:px-24 max-w-7xl mx-auto w-full pt-34 pb-44 md:pb-40"
+        className="relative z-10 px-4 sm:px-6 md:px-16 xl:px-24 max-w-7xl mx-auto w-full pt-24 sm:pt-28 md:pt-34 pb-32 md:pb-44"
       >
         <div className="max-w-3xl">
 
@@ -148,8 +148,8 @@ export default function Hero() {
               initial={{ y: 40, opacity: 0, filter: "blur(10px)" }}
               animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              className="max-w-2xl font-medium tracking-tight leading-[0.94] mb-6"
-              style={{ fontSize: "clamp(2.8rem, 6vw, 5.2rem)", color: "#fff" }}
+              className="max-w-2xl font-medium tracking-tight leading-[0.94] mb-5 md:mb-6"
+              style={{ fontSize: "clamp(2.2rem, 7vw, 5.2rem)", color: "#fff" }}
             >
               <motion.span
                 initial={{ y: 20, opacity: 0 }}
@@ -196,12 +196,12 @@ export default function Hero() {
               initial={{ y: 40, opacity: 0, filter: "blur(10px)" }}
               animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-              className="flex flex-wrap items-center gap-4"
+              className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4"
             >
               <motion.button
                 type="button"
                 onClick={() => router.push("/login")}
-                className="shimmer-btn magnetic-btn hover-trail bg-white text-black px-8 py-4 rounded-full text-base font-semibold cursor-pointer"
+                className="shimmer-btn magnetic-btn hover-trail bg-white text-black px-8 py-4 rounded-full text-base font-semibold cursor-pointer text-center justify-center flex items-center w-full sm:w-auto"
                 style={{ x: primarySpringX, y: primarySpringY }}
                 onMouseMove={(event) => applyTrail(event, primaryX, primaryY)}
                 onMouseLeave={() => resetMagnetic(primaryX, primaryY)}
@@ -216,7 +216,7 @@ export default function Hero() {
               <motion.button
                 type="button"
                 onClick={() => router.push("/login")}
-                className="glass-panel magnetic-btn hover-trail flex items-center gap-3 px-8 py-4 rounded-full text-white/80 hover:text-white text-base font-medium cursor-pointer border border-white/[0.1] hover:border-white/[0.18] transition-colors"
+                className="glass-panel magnetic-btn hover-trail flex items-center justify-center gap-3 px-8 py-4 rounded-full text-white/80 hover:text-white text-base font-medium cursor-pointer border border-white/[0.1] hover:border-white/[0.18] transition-colors w-full sm:w-auto"
                 style={{ x: secondarySpringX, y: secondarySpringY }}
                 onMouseMove={(event) => applyTrail(event, secondaryX, secondaryY)}
                 onMouseLeave={() => resetMagnetic(secondaryX, secondaryY)}
@@ -312,7 +312,7 @@ export default function Hero() {
                 delay: 0.9 + i * 0.08,
                 ease: [0.16, 1, 0.3, 1],
               }}
-              className="px-6 py-6 text-center group"
+              className="px-4 py-5 md:px-6 md:py-6 text-center group"
             >
               <div
                 className="text-2xl md:text-3xl font-semibold tracking-tighter stat-tabular"

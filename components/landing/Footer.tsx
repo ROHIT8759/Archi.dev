@@ -135,13 +135,13 @@ export default function Footer() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="flex flex-col md:flex-row justify-between items-center gap-6"
+            className="flex flex-col items-center md:flex-row md:justify-between gap-4 md:gap-6"
           >
             <div className="text-white/40 text-sm">
               © {currentYear} Archi.dev. All rights reserved.
             </div>
 
-            <div className="flex items-center gap-6">
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
               <FooterLink href="/privacy">Privacy</FooterLink>
               <FooterLink href="/terms">Terms</FooterLink>
               <FooterLink href="/refund-policy">Refunds</FooterLink>
@@ -158,7 +158,7 @@ export default function Footer() {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        className="absolute bottom-8 right-8 w-12 h-12 rounded-full glass-panel border border-white/[0.06] flex items-center justify-center text-white/60 hover:text-white hover:border-white/[0.20] transition-all duration-300 z-30"
+        className="absolute bottom-4 right-4 md:bottom-8 md:right-8 w-10 h-10 md:w-12 md:h-12 rounded-full glass-panel border border-white/[0.06] flex items-center justify-center text-white/60 hover:text-white hover:border-white/[0.20] transition-all duration-300 z-30"
       >
         <ArrowUp className="w-5 h-5" />
       </motion.button>

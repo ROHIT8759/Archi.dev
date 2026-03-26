@@ -183,7 +183,7 @@ function StepTwoVisual() {
         animate={{ opacity: [0.35, 0.7, 0.35] }}
         transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
       />
-      <div className="grid h-full gap-4 p-6 md:grid-cols-[0.92fr_1.08fr]">
+      <div className="grid h-full gap-3 p-4 md:p-6 md:grid-cols-[0.92fr_1.08fr]">
         <div className="rounded-[1.5rem] border border-white/[0.08] bg-black/30 p-5">
           <p className="text-[10px] uppercase tracking-[0.24em] text-white/30">
             Generated outputs
@@ -397,7 +397,7 @@ export default function ScrollSequence() {
   const Visual = [StepOneVisual, StepTwoVisual, StepThreeVisual][activeIndex];
 
   return (
-    <section id="solutions" className="relative px-6 py-20 md:px-16 xl:px-24">
+    <section id="solutions" className="relative px-4 sm:px-6 py-16 md:py-20 md:px-16 xl:px-24">
       <div className="section-top-line" />
       
       {/* Mobile view */}

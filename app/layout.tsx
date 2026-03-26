@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, Barlow } from "next/font/google";
 import "./globals.css";
 
@@ -14,6 +14,13 @@ const barlow = Barlow({
   variable: "--font-body",
   subsets: ["latin"],
 });
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#050505",
+};
+
 export const metadata: Metadata = {
   title: "Archi.dev - Visual Backend Architecture Studio",
   description: "Visually construct backend architectures, generate production-grade code instantly, and deploy with one click. AI-powered scaffolding for modern applications.",

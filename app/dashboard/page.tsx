@@ -138,6 +138,38 @@ export default function DashboardPage() {
       <div className="bg-grid absolute inset-0 pointer-events-none opacity-20" />
       <div className="bg-noise absolute inset-0" />
 
+      {/* Mobile top nav */}
+      <div className="lg:hidden sticky top-0 z-30 flex items-center justify-between px-4 py-3 cyber-glass border-b border-white/[0.06]">
+        <button
+          type="button"
+          onClick={() => router.push("/")}
+          className="flex items-center gap-2 cursor-pointer"
+        >
+          <div className="w-7 h-7 rounded-lg bg-cyan-400/15 border border-cyan-300/30 flex items-center justify-center">
+            <Sparkles size={12} className="text-cyan-300" />
+          </div>
+          <span className="text-sm font-semibold tracking-tight">Archi.dev</span>
+        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => router.push("/studio")}
+            className="flex items-center gap-1.5 text-xs text-white/60 hover:text-white px-3 py-1.5 rounded-full border border-white/10 hover:border-white/20 transition-colors"
+          >
+            <Rocket size={11} />
+            Studio
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push("/settings")}
+            className="flex items-center gap-1.5 text-xs text-white/60 hover:text-white px-3 py-1.5 rounded-full border border-white/10 hover:border-white/20 transition-colors"
+          >
+            <Settings size={11} />
+            Settings
+          </button>
+        </div>
+      </div>
+
       <aside className="hidden lg:flex fixed left-6 top-6 bottom-6 w-64 cyber-glass rounded-3xl z-20 p-5 flex-col">
         <button
           type="button"
@@ -183,9 +215,9 @@ export default function DashboardPage() {
         </div>
       </aside>
 
-      <div className="relative z-10 lg:pl-[312px] px-6 md:px-10 pt-10 pb-20">
+      <div className="relative z-10 lg:pl-[312px] px-4 sm:px-6 md:px-10 pt-6 md:pt-10 pb-20">
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-10">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 md:mb-10">
             <div>
               <div className="flex items-center gap-3 mb-2">
                 <span className="section-line-accent" />
@@ -210,14 +242,14 @@ export default function DashboardPage() {
             </motion.button>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 mb-8 md:mb-10">
             {stats.map((stat, i) => (
               <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: i * 0.06 }}
-                className="cyber-glass rounded-2xl px-5 py-4"
+                className="cyber-glass rounded-2xl px-3 py-3 sm:px-5 sm:py-4"
               >
                 <div className="text-[10px] uppercase tracking-[0.2em] text-white/30 mb-2">{stat.label}</div>
                 <div
@@ -238,7 +270,7 @@ export default function DashboardPage() {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10 mt-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-8 md:mb-10 mt-4 md:mt-6">
             {analyticsWidgets.map((widget, index) => {
               const maxTrend = Math.max(...widget.trend, 1);
               return (

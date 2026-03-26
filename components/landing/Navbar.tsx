@@ -222,14 +222,15 @@ export default function Navbar() {
                 <motion.button
                   type="button"
                   onClick={() => router.push("/login")}
-                  className="shimmer-btn bg-white text-black px-5 py-2 rounded-full text-sm font-semibold cursor-pointer"
+                  className="shimmer-btn bg-white text-black px-4 py-2 sm:px-5 rounded-full text-sm font-semibold cursor-pointer"
                   whileHover={{
                     scale: 1.05,
                     boxShadow: "0 0 22px rgba(255,255,255,0.32)",
                   }}
                   transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  Start free trial
+                  <span className="hidden sm:inline">Start free trial</span>
+                  <span className="sm:hidden">Sign up</span>
                 </motion.button>
               </>
             )}
